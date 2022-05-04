@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 
 WHITE = (255, 255, 255)
 BLACK = (0,0,0)
+LIGHT_BLUE = (196, 129, 82)
 
 # ASSIGN LEVELS
 level_select = []
@@ -35,7 +36,7 @@ while True:
             pygame.quit()
             sys.exit()
 
-    screen.fill(BLACK)
+    screen.fill(LIGHT_BLUE)
 
     level = level_select[level_counter]
     level.draw(screen)

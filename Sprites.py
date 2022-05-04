@@ -87,10 +87,11 @@ class Student:
 
 class Layout:
     def __init__(self, level_layout, BLOCK_SIZE):
-        student_sheet = SpriteSheet('Student.png')
-        teacher_sheet = SpriteSheet('Teacher.png')
-        nerd_sheet = SpriteSheet('Nerd.png')
-        dog_sheet = SpriteSheet('Dog.png')
+        self.student_sheet = SpriteSheet('Student.png')
+        self.teacher_sheet = SpriteSheet('Teacher.png')
+        self.nerd_sheet = SpriteSheet('Nerd.png')
+        self.dog_sheet = SpriteSheet('Dog.png')
+        self.door_sheet = SpriteSheet('School_Door.png')
 
         self.layout = level_layout
         self.block_size = BLOCK_SIZE
@@ -99,15 +100,26 @@ class Layout:
         self.enemy_list = []
 
 
-        # MAKE IMAGES
-        class_floor = pygame.image.load('Class_Floor.png').convert_alpha()
-        class_floor = pygame.transform.scale(class_floor, (self.block_size, self.block_size))
+        ############## MAKE IMAGES ################
+        # CLASSROOM
+        # self.class_floor = pygame.image.load('Class_Floor.png').convert_alpha()
+        # self.class_floor = pygame.transform.scale(self.class_floor, (self.block_size, self.block_size))
 
-        grass = pygame.image.load('Grass.png').convert_alpha()
-        grass = pygame.transform.scale(grass, (self.block_size, self.block_size))
+        self.class_floor = pygame.image.load('School_Floor.png').convert_alpha()
 
-        road = pygame.image.load('Road.png').convert_alpha()
-        road = pygame.transform.scale(road, (self.block_size, self.block_size))
+        self.school_door_O = self.door_sheet.image_at((4, 32, 10, 31), -1)
+        self.school_door_O = pygame.transform.scale(self.school_door_O, (self.block_size, self.block_size))
+
+        self.school_desk = pygame.image.load('School_Desk.png').convert_alpha()
+
+        # PLAYGROUND
+        self.grass = pygame.image.load('Grass.png').convert_alpha()
+        self.grass = pygame.transform.scale(self.grass, (self.block_size, self.block_size))
+
+        # STREET
+        self.road = pygame.image.load('Road.png').convert_alpha()
+        self.road = pygame.transform.scale(self.road, (self.block_size, self.block_size))
+
 
 
         # MAKE LEVEL
@@ -117,39 +129,46 @@ class Layout:
                 y_val = i * self.block_size
 
                 if col == 'C':
-                    img_rect = class_floor.get_rect()
+                    img_rect = self.class_floor.get_rect()
                     img_rect.x = x_val
                     img_rect.y = y_val
-                    tile = (class_floor, img_rect)
+                    tile = (self.class_floor, img_rect, 'Floor')
                     self.tile_list.append(tile)
 
-                if col == 'G':
-                    img_rect = grass.get_rect()
+                elif col == 'G':
+                    img_rect = self.grass.get_rect()
                     img_rect.x = x_val
                     img_rect.y = y_val
-                    tile = (grass, img_rect)
+                    tile = (self.grass, img_rect, 'Grass')
                     self.tile_list.append(tile)
 
-                if col == 'R':
-                    img_rect = road.get_rect()
+                elif col == 'R':
+                    img_rect = self.road.get_rect()
                     img_rect.x = x_val
                     img_rect.y = y_val
-                    tile = (road, img_rect)
+                    tile = (self.road, img_rect, 'Road')
                     self.tile_list.append(tile)
 
-                if col == 'P':
-                    self.player = Student(x_val, y_val, self.tile_list, student_sheet)
+                elif col == 'E':
+                    img_rect = self.school_door_O.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    tile = (self.road, img_rect, 'Door')
+                    self.tile_list.append(tile)
+
+                elif col == 'D':
+                    img_rect = self.school_desk.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    desk_tile = (self.school_desk, img_rect, 'Desk')
+
+                elif col == 'P':
+                    self.player = Student(x_val, y_val, self.tile_list, self.student_sheet)
 
 
     def draw(self, screen):
         for tile in self.tile_list:
             screen.blit(tile[0], tile[1])
-
-
-
-
-
-
 
 
 
