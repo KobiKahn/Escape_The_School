@@ -4,8 +4,8 @@ from Sprites import Layout
 
 pygame.init()
 
-SCREEN_W = 800
-SCREEN_H = 500
+SCREEN_W = 1050
+SCREEN_H = 550
 BLOCK_SIZE = 50
 FPS = 60
 
@@ -29,14 +29,21 @@ level_select.append(level3)
 level4 = Layout(LEVEL_4, BLOCK_SIZE)
 level_select.append(level4)
 
-# MAIN LOOP
+
+# BACKGROUND IMAGES
+classroom_bg = pygame.image.load('Classroom_Background.png').convert_alpha()
+
+
+# MAIN LOOP    
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    screen.fill(LIGHT_BLUE)
+    # screen.fill(BLACK)
+
+    screen.blit(classroom_bg, (0,0))
 
     level = level_select[level_counter]
     level.draw(screen)

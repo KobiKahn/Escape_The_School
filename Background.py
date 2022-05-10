@@ -1,27 +1,27 @@
 
 
 
-LEVEL_1 = ['0000000000000000',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0000000000000000']
+LEVEL_1 = ['00D0000D00000D0000000',
+           '0D0000000D000D0000000',
+           '0000000D00000D0000000',
+           '000D00000D000D0D00D0D',
+           '0D000000D0000D0000000',
+           '000000D000000D0000000',
+           '00D000000D00000000000',
+           '00000000000000D000000',
+           '000000D0000D000000000',
+           '0D00000000D00D0000000']
 
 LEVEL_2 = ['0000000000000000',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0CCCCCCCCCCCCCC0',
-           '0000000000000000']
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0',
+           '0C-C-C-C-C-C-C-C-C-C0']
 
 LEVEL_3 = ['0000000000000000',
            '0GGGGGGGGGGGGGG0',
