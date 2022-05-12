@@ -33,6 +33,9 @@ level_select.append(level4)
 # BACKGROUND IMAGES
 classroom_bg = pygame.image.load('Classroom_Background.png').convert_alpha()
 
+# SPRITE GROUPS
+student_group = pygame.sprite.Group()
+student_group.add(level1.student)
 
 # MAIN LOOP    
 while True:
@@ -48,6 +51,7 @@ while True:
     level = level_select[level_counter]
     level.draw(screen)
 
+    student_group.draw(screen)
     # draw_grid(SCREEN_W, SCREEN_H, BLOCK_SIZE)
 
     pygame.display.flip()

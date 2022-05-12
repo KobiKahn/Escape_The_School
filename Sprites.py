@@ -78,11 +78,135 @@ class SpriteSheet:
 
 
 
-class Student:
+class Student(pygame.sprite.Sprite):
     def __init__(self, x_val, y_val, tile_list, sprite_sheet):
+        super().__init__()
+        # INITIAL VARIABLES
         self.x_val = x_val
         self.y_val = y_val
         self.tile_list = tile_list
+        self.sprite_sheet = sprite_sheet
+        self.last = pygame.time.get_ticks()
+        self.image_delay = 100
+        self.current_frame = 0
+
+        # MAKE STUDENT IMAGES
+        self.student_images = self.sprite_sheet.load_grid_images(4, 3, 0, 12, 0, 0, 33, 36, -1)
+        for i in range(len(self.student_images)):
+            self.student_images[i] = pygame.transform.scale(self.student_images[i], (50, 50))
+
+        # STUDENT RUNNING DOWN ANIMATIONS
+        self.student_run_dn1 = self.student_images[0]
+        self.student_run_dn2 = self.student_images[1]
+        self.student_run_dn3 = self.student_images[2]
+        # MAKE A RUN DOWN LIST
+        self.student_dn_list = [self.student_run_dn1, self.student_run_dn2, self.student_run_dn3]
+
+        # STUDENT RUNNING RIGHT ANIMATIONS
+        self.student_run_rt1 = self.student_images[3]
+        self.student_run_rt2 = self.student_images[4]
+        self.student_run_rt3 = self.student_images[5]
+        # MAKE A RUN RIGHT LIST
+        self.student_rt_list = [self.student_run_rt1, self.student_run_rt2, self.student_run_rt3]
+
+        # STUDENT RUNNING UP ANIMATIONS
+        self.student_run_up1 = self.student_images[6]
+        self.student_run_up2 = self.student_images[7]
+        self.student_run_up3 = self.student_images[8]
+        # MAKE A RUN UP LIST
+        self.student_up_list = [self.student_run_up1, self.student_run_up2, self.student_run_up3]
+
+        # STUDENT RUNNING LEFT ANIMATIONS
+        self.student_run_lt1 = self.student_images[9]
+        self.student_run_lt2 = self.student_images[10]
+        self.student_run_lt3 = self.student_images[11]
+        # MAKE A RUN LEFT LIST
+        self.student_lt_list = [self.student_run_lt1, self.student_run_lt2, self.student_run_lt3]
+
+        # STUDENT INITIAL IDLE
+        self.student_idle_lt = self.student_run_lt3
+        self.image = self.student_idle_lt
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x_val
+        self.rect.y = self.y_val
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        dx = 0
+        dy = 0
+
+        # MOVING RIGHT
+        if keys[pygame.K_RIGHT]:
+            dx = 5
+            self.left = False
+            self.right = True
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.student_rt_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.student_rt_list[self.current_frame]
+
+        # MOVING LEFT
+        elif keys[pygame.K_LEFT]:
+            dx = -5
+            self.left = True
+            self.right = False
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.student_lt_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.student_lt_list[self.current_frame]
+
+        # MOVING UP
+        if keys[pygame.K_UP]:
+            dy = -5
+            self.up = True
+            self.down = False
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.student_up_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.student_up_list[self.current_frame]
+
+        # MOVING DOWN
+        if keys[pygame.K_DOWN]:
+            dy = 5
+            self.up = False
+            self.down = True
+
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.student_dn_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.student_dn_list[self.current_frame]
+# COLLISION
+        for tile in self.tile_list:
+            if tile[1].colliderect(self.rect.x, self.rect.y + dx, self.rect.width, self.rect.height):
+
+
+        self.rect.x += dx
+        self.rect.y += dy
+
+
+
+    def draw_student(self, screen):
+        screen.blit(self.image, self.rect)
 
 
 class Layout:
@@ -169,12 +293,15 @@ class Layout:
                     self.tile_list.append(desk_tile)
 
                 elif col == 'P':
-                    self.player = Student(x_val, y_val, self.tile_list, self.student_sheet)
+                    self.student = Student(x_val, y_val, self.tile_list, self.student_sheet)
+
 
 
     def draw(self, screen):
         for tile in self.tile_list:
             screen.blit(tile[0], tile[1])
+        self.student.update()
+        # self.player.draw_student(screen)
 
 
 
