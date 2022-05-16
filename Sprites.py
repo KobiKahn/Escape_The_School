@@ -76,6 +76,32 @@ class SpriteSheet:
 
         return self.images_at(sprite_rects, colorkey)
 
+class Timer:
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.height = 40
+        self.width = 151
+
+        # MAKE RECT OBJECT
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def update(self, screen):
+        dx = .5
+
+        if self.width > 0:
+            self.width -= dx
+        else:
+            self.width = 151
+
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.draw_rect(screen)
+
+    def draw_rect(self, screen):
+        pygame.draw.rect(screen, self.color, self.rect)
+
+
 class Teacher(pygame.sprite.Sprite):
     def __init__(self, x_val, y_val, tile_list, sprite_sheet):
         super().__init__()
@@ -225,11 +251,11 @@ class Teacher(pygame.sprite.Sprite):
             if keys[pygame.K_a]:
                 dx = -5
 
-        if self.rect.top <= 1:
+        if self.rect.top <= 55:
             dy = 0
             if keys[pygame.K_s]:
                 dy = 5
-        if self.rect.bottom >= 549:
+        if self.rect.bottom >= 599:
             dy = 0
             if keys[pygame.K_w]:
                 dy = -5
@@ -387,11 +413,11 @@ class Student(pygame.sprite.Sprite):
             if keys[pygame.K_LEFT]:
                 dx = -5
 
-        if self.rect.top <= 1:
+        if self.rect.top <= 55:
             dy = 0
             if keys[pygame.K_DOWN]:
                 dy = 5
-        if self.rect.bottom >= 549:
+        if self.rect.bottom >= 599:
             dy = 0
             if keys[pygame.K_UP]:
                 dy = -5

@@ -1,13 +1,14 @@
 import pygame, sys
 import random
 from Background import *
-from Sprites import Layout
+from Sprites import Layout, Timer
 
 pygame.init()
 
 # VARIABLES
+# SCREEN SETUP
 SCREEN_W = 1050
-SCREEN_H = 550
+SCREEN_H = 600
 BLOCK_SIZE = 50
 FPS = 60
 
@@ -15,9 +16,14 @@ screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
 pygame.display.set_caption('Stop_The_Student')
 clock = pygame.time.Clock()
 
+# COLORS
 WHITE = (255, 255, 255)
 BLACK = (0,0,0)
-LIGHT_BLUE = (196, 129, 82)
+LIGHT_BLUE = (0, 75, 100)
+LIGHT_RED = (95, 28, 28)
+
+# FONTS
+comic_sans = pygame.font.SysFont('Comic Sans', 40)
 
 # ASSIGN LEVELS
 level_select = []
@@ -31,6 +37,12 @@ level_select.append(level3)
 level4 = Layout(LEVEL_4, BLOCK_SIZE)
 level_select.append(level4)
 
+# LEVEL NAMES
+level_name = ''
+level1_name = 'THE CLASSROOM'
+level2_name = 'THE HALLWAY'
+level3_name = 'THE PLAYGROUND'
+level4_name = 'THE STREET'
 
 # BACKGROUND IMAGES
 classroom_bg = pygame.image.load('Classroom_Background.png').convert_alpha()
@@ -42,12 +54,15 @@ student_group.add(level1.student)
 teacher_group = pygame.sprite.Group()
 teacher_group.add(level1.teacher)
 
+# DIFFERENT TIMERS
+blue_timer = Timer(600, 0, LIGHT_BLUE)
+red_timer = Timer(600, 0, LIGHT_RED)
+
 # INITIAL STUDENT SPEED AND TIMER
 student_adv = False
 timer = 0
 
 # MAIN LOOP
-
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -68,7 +83,22 @@ while True:
         # print(student_adv)
 
     # DRAW THINGS TO SCREEN
-    screen.blit(classroom_bg, (0, 0))
+    screen.fill(BLACK)
+    # DRAW HUD
+    if level_counter == 0:
+        level_name = comic_sans.render(f'{level1_name}', True, (255, 255, 255))
+    elif level_counter == 1:
+        level_name = comic_sans.render(f'{level2_name}', True, (255, 255, 255))
+    elif level_counter == 2:
+        level_name = comic_sans.render(f'{level3_name}', True, (255, 255, 255))
+    elif level_counter == 3:
+        level_name = comic_sans.render(f'{level4_name}', True, (255, 255, 255))
+    screen.blit(level_name, (0,0))
+
+    blue_timer.update(screen)
+
+    # DRAW PLAY AREA
+    screen.blit(classroom_bg, (0, 50))
 
     level = level_select[level_counter]
     level.draw(screen, student_adv)
