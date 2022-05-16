@@ -81,19 +81,19 @@ class Timer:
         self.x = x
         self.y = y
         self.color = color
-        self.height = 40
-        self.width = 151
+        self.height = 38
+        self.width = 200
 
         # MAKE RECT OBJECT
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
     def update(self, screen):
-        dx = .5
+        dx = .4
 
         if self.width > 0:
             self.width -= dx
         else:
-            self.width = 151
+            self.width = 200
 
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.draw_rect(screen)

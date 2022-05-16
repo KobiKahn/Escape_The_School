@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 WHITE = (255, 255, 255)
 BLACK = (0,0,0)
 LIGHT_BLUE = (0, 75, 100)
-LIGHT_RED = (95, 28, 28)
+LIGHT_RED = (219, 0, 135)
 
 # FONTS
 comic_sans = pygame.font.SysFont('Comic Sans', 40)
@@ -55,8 +55,11 @@ teacher_group = pygame.sprite.Group()
 teacher_group.add(level1.teacher)
 
 # DIFFERENT TIMERS
-blue_timer = Timer(600, 0, LIGHT_BLUE)
-red_timer = Timer(600, 0, LIGHT_RED)
+blue_timer = Timer(600, 4, LIGHT_BLUE)
+red_timer = Timer(600, 4, LIGHT_RED)
+
+timer_outline = pygame.image.load('Timer_Outline.png').convert_alpha()
+timer_outline = pygame.transform.scale(timer_outline, (220, 55))
 
 # INITIAL STUDENT SPEED AND TIMER
 student_adv = False
@@ -95,8 +98,9 @@ while True:
         level_name = comic_sans.render(f'{level4_name}', True, (255, 255, 255))
     screen.blit(level_name, (0,0))
 
-    blue_timer.update(screen)
-
+    # blue_timer.update(screen)
+    red_timer.update(screen)
+    screen.blit(timer_outline, (592, -5))
     # DRAW PLAY AREA
     screen.blit(classroom_bg, (0, 50))
 
