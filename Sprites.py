@@ -76,7 +76,169 @@ class SpriteSheet:
 
         return self.images_at(sprite_rects, colorkey)
 
+class Teacher(pygame.sprite.Sprite):
+    def __init__(self, x_val, y_val, tile_list, sprite_sheet):
+        super().__init__()
+        self.x_val = x_val
+        self.y_val = y_val
+        self.tile_list = tile_list
+        self.sprite_sheet = sprite_sheet
+        self.last = pygame.time.get_ticks()
+        self.image_delay = 100
+        self.current_frame = 0
 
+        self.teacher_images = self.sprite_sheet.load_grid_images(4, 4, 6, 11, 0, 0, 21, 32, -1)
+        for i in range(len(self.teacher_images)):
+            self.teacher_images[i] = pygame.transform.scale(self.teacher_images[i], (50, 50))
+
+        # STUDENT RUNNING DOWN ANIMATIONS
+        self.teacher_run_dn1 = self.teacher_images[0]
+        self.teacher_run_dn2 = self.teacher_images[1]
+        self.teacher_run_dn3 = self.teacher_images[2]
+        self.teacher_run_dn4 = self.teacher_images[3]
+        # MAKE A RUN DOWN LIST
+        self.teacher_dn_list = [self.teacher_run_dn1, self.teacher_run_dn2, self.teacher_run_dn3]
+
+        # teacher RUNNING RIGHT ANIMATIONS
+        self.teacher_run_rt1 = self.teacher_images[12]
+        self.teacher_run_rt2 = self.teacher_images[13]
+        self.teacher_run_rt3 = self.teacher_images[14]
+        self.teacher_run_rt4 = self.teacher_images[15]
+        # MAKE A RUN RIGHT LIST
+        self.teacher_rt_list = [self.teacher_run_rt1, self.teacher_run_rt2, self.teacher_run_rt3]
+
+        # teacher RUNNING UP ANIMATIONS
+        self.teacher_run_up1 = self.teacher_images[4]
+        self.teacher_run_up2 = self.teacher_images[5]
+        self.teacher_run_up3 = self.teacher_images[6]
+        self.teacher_run_up4 = self.teacher_images[7]
+        # MAKE A RUN UP LIST
+        self.teacher_up_list = [self.teacher_run_up1, self.teacher_run_up2, self.teacher_run_up3]
+
+        # teacher RUNNING LEFT ANIMATIONS
+        self.teacher_run_lt1 = self.teacher_images[8]
+        self.teacher_run_lt2 = self.teacher_images[9]
+        self.teacher_run_lt3 = self.teacher_images[10]
+        self.teacher_run_lt4 = self.teacher_images[11]
+        # MAKE A RUN LEFT LIST
+        self.teacher_lt_list = [self.teacher_run_lt1, self.teacher_run_lt2, self.teacher_run_lt3]
+
+        # STUDENT INITIAL IDLE
+        self.teacher_idle_lt = self.teacher_run_lt3
+        self.image = self.teacher_idle_lt
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x_val
+        self.rect.y = self.y_val
+
+    def update(self, student_adv):
+        keys = pygame.key.get_pressed()
+        dx = 0
+        dy = 0
+
+        # MOVING RIGHT
+        if keys[pygame.K_d]:
+            if student_adv:
+                dx = 5
+            else:
+                dx = 6
+            self.left = False
+            self.right = True
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.teacher_rt_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.teacher_rt_list[self.current_frame]
+
+        # MOVING LEFT
+        elif keys[pygame.K_a]:
+            if student_adv:
+                dx = -5
+            else:
+                dx = -6
+
+            self.left = True
+            self.right = False
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.teacher_lt_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.teacher_lt_list[self.current_frame]
+
+        # MOVING UP
+        if keys[pygame.K_w]:
+            # if student_adv:
+            #     dy = -5
+            # else:
+            #     dy = -6
+            dy = -5
+
+            self.up = True
+            self.down = False
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.teacher_up_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.teacher_up_list[self.current_frame]
+
+        # MOVING DOWN
+        if keys[pygame.K_s]:
+            # if student_adv:
+            #     dy = 5
+            # else:
+            #     dy = 6
+            dy = 5
+
+            self.up = False
+            self.down = True
+
+            now = pygame.time.get_ticks()
+            if (now - self.last) >= self.image_delay:
+                self.last = now
+
+            if (self.current_frame + 1) < len(self.teacher_dn_list):
+                self.current_frame += 1
+            else:
+                self.current_frame = 0
+            self.image = self.teacher_dn_list[self.current_frame]
+
+        # COLLISION
+        # COLLISION WITH WALLS
+        if self.rect.left <= 1:
+            dx = 0
+            if keys[pygame.K_d]:
+                dx = 5
+
+        elif self.rect.right >= 1049:
+            dx = 0
+            if keys[pygame.K_a]:
+                dx = -5
+
+        if self.rect.top <= 1:
+            dy = 0
+            if keys[pygame.K_s]:
+                dy = 5
+        if self.rect.bottom >= 549:
+            dy = 0
+            if keys[pygame.K_w]:
+                dy = -5
+
+        self.rect.x += dx
+        self.rect.y += dy
+
+    def draw_teacher(self, screen):
+        screen.blit(self.image, self.rect)
 
 class Student(pygame.sprite.Sprite):
     def __init__(self, x_val, y_val, tile_list, sprite_sheet):
@@ -130,14 +292,17 @@ class Student(pygame.sprite.Sprite):
         self.rect.x = self.x_val
         self.rect.y = self.y_val
 
-    def update(self):
+    def update(self, speed):
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
 
         # MOVING RIGHT
         if keys[pygame.K_RIGHT]:
-            dx = 5
+            if speed:
+                dx = 6
+            else:
+                dx = 5
             self.left = False
             self.right = True
             now = pygame.time.get_ticks()
@@ -152,7 +317,11 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING LEFT
         elif keys[pygame.K_LEFT]:
-            dx = -5
+            if speed:
+                dx = -6
+            else:
+                dx = -5
+
             self.left = True
             self.right = False
             now = pygame.time.get_ticks()
@@ -167,7 +336,12 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING UP
         if keys[pygame.K_UP]:
+            # if speed:
+            #     dy = -6
+            # else:
+            #     dy = -5
             dy = -5
+
             self.up = True
             self.down = False
             now = pygame.time.get_ticks()
@@ -182,7 +356,12 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING DOWN
         if keys[pygame.K_DOWN]:
+            # if speed:
+            #     dy = 6
+            # else:
+            #     dy = 5
             dy = 5
+
             self.up = False
             self.down = True
 
@@ -195,18 +374,31 @@ class Student(pygame.sprite.Sprite):
             else:
                 self.current_frame = 0
             self.image = self.student_dn_list[self.current_frame]
+
 # COLLISION
-        for tile in self.tile_list:
-            if tile[1].colliderect(self.rect.x, self.rect.y + dx, self.rect.width, self.rect.height):
+        # COLLISION WITH WALLS
+        if self.rect.left <= 1:
+            dx = 0
+            if keys[pygame.K_RIGHT]:
+                dx = 5
+
+        elif self.rect.right >= 1049:
+            dx = 0
+            if keys[pygame.K_LEFT]:
+                dx = -5
+
+        if self.rect.top <= 1:
+            dy = 0
+            if keys[pygame.K_DOWN]:
+                dy = 5
+        if self.rect.bottom >= 549:
+            dy = 0
+            if keys[pygame.K_UP]:
+                dy = -5
 
 
         self.rect.x += dx
         self.rect.y += dy
-
-
-
-    def draw_student(self, screen):
-        screen.blit(self.image, self.rect)
 
 
 class Layout:
@@ -220,14 +412,9 @@ class Layout:
         self.layout = level_layout
         self.block_size = BLOCK_SIZE
         self.tile_list = []
-        self.player_list = []
-        self.enemy_list = []
 
 
         ############## MAKE IMAGES ################
-        # CLASSROOM
-        # self.class_floor = pygame.image.load('Class_Floor.png').convert_alpha()
-        # self.class_floor = pygame.transform.scale(self.class_floor, (self.block_size, self.block_size))
 
         self.class_floor = pygame.image.load('School_Floor.png').convert_alpha()
 
@@ -295,12 +482,18 @@ class Layout:
                 elif col == 'P':
                     self.student = Student(x_val, y_val, self.tile_list, self.student_sheet)
 
+                elif col == 'T':
+                    self.teacher = Teacher(x_val, y_val, self.tile_list, self.teacher_sheet)
 
 
-    def draw(self, screen):
+
+    def draw(self, screen, student_adv):
         for tile in self.tile_list:
             screen.blit(tile[0], tile[1])
-        self.student.update()
+
+
+        self.student.update(student_adv)
+        self.teacher.update(student_adv)
         # self.player.draw_student(screen)
 
 

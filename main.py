@@ -1,9 +1,11 @@
 import pygame, sys
+import random
 from Background import *
 from Sprites import Layout
 
 pygame.init()
 
+# VARIABLES
 SCREEN_W = 1050
 SCREEN_H = 550
 BLOCK_SIZE = 50
@@ -37,37 +39,45 @@ classroom_bg = pygame.image.load('Classroom_Background.png').convert_alpha()
 student_group = pygame.sprite.Group()
 student_group.add(level1.student)
 
-# MAIN LOOP    
+teacher_group = pygame.sprite.Group()
+teacher_group.add(level1.teacher)
+
+# INITIAL STUDENT SPEED AND TIMER
+student_adv = False
+timer = 0
+
+# MAIN LOOP
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    # screen.fill(BLACK)
+    # CHANGE WHO THE TAGGER IS
+    timer += 1
+    if timer >= 300:
+        timer = 0
 
-    screen.blit(classroom_bg, (0,0))
+        if student_adv == True:
+            student_adv = False
+            print('Student is slow now')
+        else:
+            student_adv = True
+            print('Student is fast now')
+        # print(student_adv)
+
+    # DRAW THINGS TO SCREEN
+    screen.blit(classroom_bg, (0, 0))
 
     level = level_select[level_counter]
-    level.draw(screen)
+    level.draw(screen, student_adv)
 
     student_group.draw(screen)
-    # draw_grid(SCREEN_W, SCREEN_H, BLOCK_SIZE)
+    teacher_group.draw(screen)
 
     pygame.display.flip()
     clock.tick(FPS)
-
-
-############################################################ USELESS STUFF DOWN HERE
-# def draw_grid(width, height, size):
-#     z = 0
-#     for x in range(1, width - 50, size):
-#         for y in range(1, height - 50, size):
-#             z += 1
-#             # rect = pygame.Rect(x, y, size, size)
-#             # pygame.draw.rect(screen, WHITE, rect, 2)
-#             if z not in range(10):
-#                 screen.blit(class_floor, (x,y))
 
 
 
