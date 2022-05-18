@@ -19,7 +19,7 @@ clock = pygame.time.Clock()
 # COLORS
 WHITE = (255, 255, 255)
 BLACK = (0,0,0)
-LIGHT_BLUE = (0, 75, 100)
+LIGHT_BLUE = (52, 171, 235)
 LIGHT_RED = (219, 0, 135)
 
 # FONTS
@@ -55,8 +55,8 @@ teacher_group = pygame.sprite.Group()
 teacher_group.add(level1.teacher)
 
 # DIFFERENT TIMERS
-blue_timer = Timer(600, 4, LIGHT_BLUE)
-red_timer = Timer(600, 4, LIGHT_RED)
+blue_timer = Timer(700, 4, LIGHT_BLUE)
+red_timer = Timer(700, 4, LIGHT_RED)
 
 timer_outline = pygame.image.load('Timer_Outline.png').convert_alpha()
 timer_outline = pygame.transform.scale(timer_outline, (220, 55))
@@ -74,7 +74,7 @@ while True:
 
     # CHANGE WHO THE TAGGER IS
     timer += 1
-    if timer >= 300:
+    if timer >= 500:
         timer = 0
 
         if student_adv == True:
@@ -98,9 +98,12 @@ while True:
         level_name = comic_sans.render(f'{level4_name}', True, (255, 255, 255))
     screen.blit(level_name, (0,0))
 
-    # blue_timer.update(screen)
-    red_timer.update(screen)
-    screen.blit(timer_outline, (592, -5))
+    if student_adv:
+        blue_timer.update(screen)
+    else:
+        red_timer.update(screen)
+
+    screen.blit(timer_outline, (692, -5))
     # DRAW PLAY AREA
     screen.blit(classroom_bg, (0, 50))
 

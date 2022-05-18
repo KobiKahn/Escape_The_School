@@ -100,6 +100,7 @@ class Timer:
 
     def draw_rect(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
+        return self.width
 
 
 class Teacher(pygame.sprite.Sprite):
@@ -115,7 +116,7 @@ class Teacher(pygame.sprite.Sprite):
 
         self.teacher_images = self.sprite_sheet.load_grid_images(4, 4, 6, 11, 0, 0, 21, 32, -1)
         for i in range(len(self.teacher_images)):
-            self.teacher_images[i] = pygame.transform.scale(self.teacher_images[i], (50, 50))
+            self.teacher_images[i] = pygame.transform.scale(self.teacher_images[i], (45, 45))
 
         # STUDENT RUNNING DOWN ANIMATIONS
         self.teacher_run_dn1 = self.teacher_images[0]
@@ -156,7 +157,10 @@ class Teacher(pygame.sprite.Sprite):
         self.rect.x = self.x_val
         self.rect.y = self.y_val
 
-    def update(self, student_adv):
+        self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+    def update(self, student_adv, screen):
+        LIGHT_RED = (219, 0, 135)
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
@@ -260,11 +264,23 @@ class Teacher(pygame.sprite.Sprite):
             if keys[pygame.K_w]:
                 dy = -5
 
+        # COLLISIONS
+        for tile in self.tile_list:
+            if tile[2] == 'Desk':
+                if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
+                    dx = 0
+                if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
+                    dy = 0
+
         self.rect.x += dx
         self.rect.y += dy
 
-    def draw_teacher(self, screen):
-        screen.blit(self.image, self.rect)
+        # RECTANGLE THAT SHOWS WHO IS TAGGER
+        self.tagger_rect.x = self.rect.centerx - 6
+        self.tagger_rect.y = self.rect.top - 22
+
+        if student_adv == False:
+            pygame.draw.rect(screen, LIGHT_RED, self.tagger_rect)
 
 class Student(pygame.sprite.Sprite):
     def __init__(self, x_val, y_val, tile_list, sprite_sheet):
@@ -278,10 +294,11 @@ class Student(pygame.sprite.Sprite):
         self.image_delay = 100
         self.current_frame = 0
 
+
         # MAKE STUDENT IMAGES
         self.student_images = self.sprite_sheet.load_grid_images(4, 3, 0, 12, 0, 0, 33, 36, -1)
         for i in range(len(self.student_images)):
-            self.student_images[i] = pygame.transform.scale(self.student_images[i], (50, 50))
+            self.student_images[i] = pygame.transform.scale(self.student_images[i], (45, 45))
 
         # STUDENT RUNNING DOWN ANIMATIONS
         self.student_run_dn1 = self.student_images[0]
@@ -318,14 +335,17 @@ class Student(pygame.sprite.Sprite):
         self.rect.x = self.x_val
         self.rect.y = self.y_val
 
-    def update(self, speed):
+        self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+    def update(self, student_adv, screen):
+        LIGHT_BLUE = (52, 171, 235)
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
 
         # MOVING RIGHT
         if keys[pygame.K_RIGHT]:
-            if speed:
+            if student_adv:
                 dx = 6
             else:
                 dx = 5
@@ -343,7 +363,7 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING LEFT
         elif keys[pygame.K_LEFT]:
-            if speed:
+            if student_adv:
                 dx = -6
             else:
                 dx = -5
@@ -362,10 +382,6 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING UP
         if keys[pygame.K_UP]:
-            # if speed:
-            #     dy = -6
-            # else:
-            #     dy = -5
             dy = -5
 
             self.up = True
@@ -382,10 +398,6 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING DOWN
         if keys[pygame.K_DOWN]:
-            # if speed:
-            #     dy = 6
-            # else:
-            #     dy = 5
             dy = 5
 
             self.up = False
@@ -422,9 +434,24 @@ class Student(pygame.sprite.Sprite):
             if keys[pygame.K_UP]:
                 dy = -5
 
+        # COLLISIONS
+        for tile in self.tile_list:
+            if tile[2] == 'Desk':
+                if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
+                    dx = 0
+                if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
+                    dy = 0
 
+
+
+        # SET POSITION FOR PLAYER AND TAGGING RECTANGLE
         self.rect.x += dx
         self.rect.y += dy
+        self.tagger_rect.x = self.rect.centerx - 6
+        self.tagger_rect.y = self.rect.top - 22
+
+        if student_adv:
+            pygame.draw.rect(screen, LIGHT_BLUE, self.tagger_rect)
 
 
 class Layout:
@@ -452,7 +479,7 @@ class Layout:
 
 
         self.school_desk = pygame.image.load('Top_Down_Desk.png').convert_alpha()
-        self.school_desk = pygame.transform.scale(self.school_desk, (self.block_size * 1.5, self.block_size))
+        self.school_desk = pygame.transform.scale(self.school_desk, (self.block_size * 1.1, self.block_size))
 
         # PLAYGROUND
         self.grass = pygame.image.load('Grass.png').convert_alpha()
@@ -518,8 +545,8 @@ class Layout:
             screen.blit(tile[0], tile[1])
 
 
-        self.student.update(student_adv)
-        self.teacher.update(student_adv)
+        self.student.update(student_adv, screen)
+        self.teacher.update(student_adv, screen)
         # self.player.draw_student(screen)
 
 
