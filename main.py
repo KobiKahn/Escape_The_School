@@ -47,6 +47,8 @@ level4_name = 'THE STREET'
 # BACKGROUND IMAGES
 classroom_bg = pygame.image.load('Classroom_Background.png').convert_alpha()
 
+title_screen = pygame.image.load('Tag_Title_Screen.png').convert_alpha()
+
 # SPRITE GROUPS
 student_group = pygame.sprite.Group()
 student_group.add(level1.student)
@@ -64,7 +66,8 @@ timer_outline = pygame.transform.scale(timer_outline, (220, 55))
 # INITIAL STUDENT SPEED AND TIMER
 student_adv = False
 timer = 0
-
+collision = False
+title_bool = False
 # MAIN LOOP
 while True:
     for event in pygame.event.get():
@@ -72,46 +75,69 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # CHANGE WHO THE TAGGER IS
-    timer += 1
-    if timer >= 500:
-        timer = 0
+    if title_bool == True:
+        screen.blit(title_screen, (0, 0))
 
-        if student_adv == True:
-            student_adv = False
-            print('Student is slow now')
-        else:
-            student_adv = True
-            print('Student is fast now')
-        # print(student_adv)
-
-    # DRAW THINGS TO SCREEN
-    screen.fill(BLACK)
-    # DRAW HUD
-    if level_counter == 0:
-        level_name = comic_sans.render(f'{level1_name}', True, (255, 255, 255))
-    elif level_counter == 1:
-        level_name = comic_sans.render(f'{level2_name}', True, (255, 255, 255))
-    elif level_counter == 2:
-        level_name = comic_sans.render(f'{level3_name}', True, (255, 255, 255))
-    elif level_counter == 3:
-        level_name = comic_sans.render(f'{level4_name}', True, (255, 255, 255))
-    screen.blit(level_name, (0,0))
-
-    if student_adv:
-        blue_timer.update(screen)
     else:
-        red_timer.update(screen)
+        # CHANGE WHO THE TAGGER IS
+        timer += 1
+        if timer >= 500:
+            timer = 0
+            if student_adv == True:
+                student_adv = False
+            else:
+                student_adv = True
 
-    screen.blit(timer_outline, (692, -5))
-    # DRAW PLAY AREA
-    screen.blit(classroom_bg, (0, 50))
+        # DRAW THINGS TO SCREEN
+        screen.fill(BLACK)
 
-    level = level_select[level_counter]
-    level.draw(screen, student_adv)
+        # DRAW HUD
+        if level_counter == 0:
+            level_name = comic_sans.render(f'{level1_name}', True, (255, 255, 255))
+        elif level_counter == 1:
+            level_name = comic_sans.render(f'{level2_name}', True, (255, 255, 255))
+        elif level_counter == 2:
+            level_name = comic_sans.render(f'{level3_name}', True, (255, 255, 255))
+        elif level_counter == 3:
+            level_name = comic_sans.render(f'{level4_name}', True, (255, 255, 255))
+        screen.blit(level_name, (0,0))
 
-    student_group.draw(screen)
-    teacher_group.draw(screen)
+        if student_adv:
+            blue_timer.update(screen)
+        else:
+            red_timer.update(screen)
+
+        screen.blit(timer_outline, (692, -5))
+
+        # DRAW PLAY AREA
+        if level_counter == 0:
+            screen.blit(classroom_bg, (0, 50))
+            student_group.draw(screen)
+            teacher_group.draw(screen)
+
+        level = level_select[level_counter]
+        level.draw(screen, student_adv, collision)
+
+
+        if level_counter == 0 and not collision:
+            if student_adv:
+                for student_sprite in student_group:
+                    if pygame.sprite.spritecollide(student_sprite, teacher_group, True):
+                        print('STUDENT WON!!')
+                        collision = True
+                        title_bool = True
+                    else:
+                        collision = False
+
+            else:
+                for teacher_sprite in teacher_group:
+                    if pygame.sprite.spritecollide(teacher_sprite, student_group, True):
+                        print('TEACHER WON!!')
+                        collision = True
+                        title_bool = True
+                    else:
+                        collision = False
+
 
     pygame.display.flip()
     clock.tick(FPS)

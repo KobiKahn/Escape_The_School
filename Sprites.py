@@ -159,7 +159,7 @@ class Teacher(pygame.sprite.Sprite):
 
         self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
 
-    def update(self, student_adv, screen):
+    def update(self, student_adv, screen, collision):
         LIGHT_RED = (219, 0, 135)
         keys = pygame.key.get_pressed()
         dx = 0
@@ -279,8 +279,9 @@ class Teacher(pygame.sprite.Sprite):
         self.tagger_rect.x = self.rect.centerx - 6
         self.tagger_rect.y = self.rect.top - 22
 
-        if student_adv == False:
+        if student_adv == False and not collision:
             pygame.draw.rect(screen, LIGHT_RED, self.tagger_rect)
+
 
 class Student(pygame.sprite.Sprite):
     def __init__(self, x_val, y_val, tile_list, sprite_sheet):
@@ -337,7 +338,7 @@ class Student(pygame.sprite.Sprite):
 
         self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
 
-    def update(self, student_adv, screen):
+    def update(self, student_adv, screen, collision):
         LIGHT_BLUE = (52, 171, 235)
         keys = pygame.key.get_pressed()
         dx = 0
@@ -450,7 +451,7 @@ class Student(pygame.sprite.Sprite):
         self.tagger_rect.x = self.rect.centerx - 6
         self.tagger_rect.y = self.rect.top - 22
 
-        if student_adv:
+        if student_adv and not collision:
             pygame.draw.rect(screen, LIGHT_BLUE, self.tagger_rect)
 
 
@@ -540,13 +541,13 @@ class Layout:
 
 
 
-    def draw(self, screen, student_adv):
+    def draw(self, screen, student_adv, collision):
         for tile in self.tile_list:
             screen.blit(tile[0], tile[1])
 
 
-        self.student.update(student_adv, screen)
-        self.teacher.update(student_adv, screen)
+        self.student.update(student_adv, screen, collision)
+        self.teacher.update(student_adv, screen, collision)
         # self.player.draw_student(screen)
 
 
