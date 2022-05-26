@@ -29,7 +29,7 @@ def start_screen(lx, ly, lw, lh):
 
         screen.fill(BLACK)
         screen.blit(title_background, (0,0))
-        pygame.draw.rect(screen, (0, 0, 0), level_rect)
+        # pygame.draw.rect(screen, (0, 0, 0), level_rect)
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -44,36 +44,54 @@ def level_screen():
     while running:
         pos = pygame.mouse.get_pos()
 
-        level1_button = pygame.Rect(30, 30, 100, 100)
-        level2_button = pygame.Rect(160, 30, 100, 100)
-        level3_button = pygame.Rect(290, 30, 100, 100)
-        level4_button = pygame.Rect(420, 30, 100, 100)
+        level1_button = pygame.Rect(50, 110, 230, 60)
+        level2_button = pygame.Rect(370, 110, 230, 60)
+        level3_button = pygame.Rect(670, 110, 230, 60)
+
+        level_1 = level_select_text.render(f'LEVEL 1', True, (255, 255, 255))
+        level_2 = level_select_text.render(f'LEVEL 2', True, (255, 255, 255))
+        level_3 = level_select_text.render(f'LEVEL 3', True, (255, 255, 255))
+
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if level1_button.collidepoint(pos):
                     running = False
-                    return(0)
+                    return (0)
 
                 elif level2_button.collidepoint(pos):
                     runnning = False
-                    return(1)
+                    return (1)
                 elif level3_button.collidepoint(pos):
                     running = False
-                    return(2)
-                elif level4_button.collidepoint(pos):
-                    running = False
-                    return(3)
+                    return (2)
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+
+
+
+        if level1_button.collidepoint(pos):
+            level_1 = level_select_text.render(f'LEVEL 1', True, (255, 60, 30))
+
+        elif level2_button.collidepoint(pos):
+            level_2 = level_select_text.render(f'LEVEL 2', True, (255, 60, 30))
+
+        elif level3_button.collidepoint(pos):
+            level_3 = level_select_text.render(f'LEVEL 3', True, (255, 60, 30))
+
 
         screen.fill(LIGHT_BLUE)
-        pygame.draw.rect(screen, (0, 0, 0), level1_button)
-        pygame.draw.rect(screen, (0, 0, 0), level2_button)
-        pygame.draw.rect(screen, (0, 0, 0), level3_button)
-        pygame.draw.rect(screen, (0, 0, 0), level4_button)
+        # pygame.draw.rect(screen, (0, 0, 0), level1_button)
+        # pygame.draw.rect(screen, (0, 0, 0), level2_button)
+        # pygame.draw.rect(screen, (0, 0, 0), level3_button)
+
+        screen.blit(level_1, (50, 100))
+        screen.blit(level_2, (370, 100))
+        screen.blit(level_3, (670, 100))
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -84,9 +102,8 @@ def play_screen(level_counter):
     # INITIAL VALS
     level_name = ''
     level1_name = 'THE CLASSROOM'
-    level2_name = 'THE HALLWAY'
-    level3_name = 'THE PLAYGROUND'
-    level4_name = 'THE STREET'
+    level2_name = 'THE PLAYGROUND'
+    level3_name = 'THE STREET'
 
     blue_timer = Timer(700, 4, LIGHT_BLUE)
     red_timer = Timer(700, 4, LIGHT_RED)
@@ -103,8 +120,6 @@ def play_screen(level_counter):
     level_select.append(level2)
     level3 = Layout(LEVEL_3, BLOCK_SIZE)
     level_select.append(level3)
-    level4 = Layout(LEVEL_4, BLOCK_SIZE)
-    level_select.append(level4)
 
     # BACKGROUND IMAGES
     classroom_bg = pygame.image.load('Classroom_Background.png').convert_alpha()
@@ -145,8 +160,6 @@ def play_screen(level_counter):
             level_name = comic_sans.render(f'{level2_name}', True, (255, 255, 255))
         elif level_counter == 2:
             level_name = comic_sans.render(f'{level3_name}', True, (255, 255, 255))
-        elif level_counter == 3:
-            level_name = comic_sans.render(f'{level4_name}', True, (255, 255, 255))
         screen.blit(level_name, (0, 0))
 
         if student_adv:
@@ -191,8 +204,8 @@ def end_screen(winner):
     running = True
 
     # BUTTONS
-    title_button = pygame.Rect(150, 500, 100, 50)
-    exit_button = pygame.Rect(900, 500, 100, 50)
+    title_button = pygame.Rect(135, 500, 320, 50)
+    exit_button = pygame.Rect(885, 500, 140, 50)
 
     clock = pygame.time.Clock()
 
@@ -210,11 +223,13 @@ def end_screen(winner):
                     return False
 
         winner_text = comic_sans.render(f'{winner} WON THE GAME!!', True, (255, 255, 255))
-
-        screen.blit(winner_text, (300, 300))
-
-        pygame.draw.rect(screen, LIGHT_BLUE, title_button)
-        pygame.draw.rect(screen, LIGHT_BLUE, exit_button)
+        return_text = comic_sans.render(f'TITLE SCREEN', True, (255, 255, 255))
+        exit_text = comic_sans.render(f'EXIT', True, (255, 255, 255))
+        screen.blit(winner_text, (250, 280))
+        # pygame.draw.rect(screen, LIGHT_BLUE, title_button)
+        # pygame.draw.rect(screen, LIGHT_BLUE, exit_button)
+        screen.blit(return_text, (140, 500))
+        screen.blit(exit_text, (890, 500))
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -244,6 +259,7 @@ LIGHT_RED = (219, 0, 135)
 
 # FONTS
 comic_sans = pygame.font.SysFont('Comic Sans', 40)
+level_select_text = pygame.font.SysFont('Comic Sans', 60)
 
 clock = pygame.time.Clock()
 

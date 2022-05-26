@@ -473,13 +473,6 @@ class Layout:
 
         self.class_floor = pygame.image.load('School_Floor.png').convert_alpha()
 
-        self.school_door_0 = self.door_sheet.image_at((4, 64, 16, 32))
-        self.school_door_0 = pygame.transform.scale(self.school_door_0, (self.block_size, self.block_size))
-
-        self.school_door_1 = self.door_sheet.image_at((4, 32, 10, 31))
-        self.school_door_1 = pygame.transform.scale(self.school_door_1, (self.block_size, self.block_size))
-
-
         self.school_desk = pygame.image.load('Top_Down_Desk.png').convert_alpha()
         self.school_desk = pygame.transform.scale(self.school_desk, (self.block_size * 1.1, self.block_size))
 
@@ -518,13 +511,6 @@ class Layout:
                     img_rect.x = x_val
                     img_rect.y = y_val
                     tile = (self.road, img_rect, 'Road')
-                    self.tile_list.append(tile)
-
-                elif col == 'E':
-                    img_rect = self.school_door_0.get_rect()
-                    img_rect.x = x_val
-                    img_rect.y = y_val
-                    tile = (self.road, img_rect, 'Door')
                     self.tile_list.append(tile)
 
                 elif col == 'D':
