@@ -23,7 +23,7 @@ def start_screen(lx, ly, lw, lh):
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONUP:
                 if level_rect.collidepoint(pos):
                     running = False
 
@@ -47,32 +47,35 @@ def level_screen():
         level1_button = pygame.Rect(50, 110, 230, 60)
         level2_button = pygame.Rect(370, 110, 230, 60)
         level3_button = pygame.Rect(670, 110, 230, 60)
+        back_button = pygame.Rect(50, 515, 152, 60)
 
         level_1 = level_select_text.render(f'LEVEL 1', True, (255, 255, 255))
         level_2 = level_select_text.render(f'LEVEL 2', True, (255, 255, 255))
         level_3 = level_select_text.render(f'LEVEL 3', True, (255, 255, 255))
 
+        back = level_select_text.render(f'BACK', True, (255, 255, 255))
+
 
         for event in pygame.event.get():
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONUP:
                 if level1_button.collidepoint(pos):
                     running = False
-                    return (0)
+                    return (True, 0)
 
                 elif level2_button.collidepoint(pos):
                     runnning = False
-                    return (1)
+                    return (True, 1)
                 elif level3_button.collidepoint(pos):
                     running = False
-                    return (2)
+                    return (True, 2)
+                elif back_button.collidepoint(pos):
+                    running = False
+                    return(False)
 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
-
-
 
         if level1_button.collidepoint(pos):
             level_1 = level_select_text.render(f'LEVEL 1', True, (255, 60, 30))
@@ -83,15 +86,20 @@ def level_screen():
         elif level3_button.collidepoint(pos):
             level_3 = level_select_text.render(f'LEVEL 3', True, (255, 60, 30))
 
+        elif back_button.collidepoint(pos):
+            back = level_select_text.render(f'BACK', True, (255, 60, 30))
+
 
         screen.fill(LIGHT_BLUE)
         # pygame.draw.rect(screen, (0, 0, 0), level1_button)
         # pygame.draw.rect(screen, (0, 0, 0), level2_button)
         # pygame.draw.rect(screen, (0, 0, 0), level3_button)
+        # pygame.draw.rect(screen, (0,0,0), back_button)
 
         screen.blit(level_1, (50, 100))
         screen.blit(level_2, (370, 100))
         screen.blit(level_3, (670, 100))
+        screen.blit(back, (50, 500))
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -207,28 +215,39 @@ def end_screen(winner):
     title_button = pygame.Rect(135, 500, 320, 50)
     exit_button = pygame.Rect(885, 500, 140, 50)
 
+
+
     clock = pygame.time.Clock()
 
     while running:
+        winner_text = comic_sans.render(f'{winner} WON THE GAME!!', True, (255, 255, 255))
+        title_text = comic_sans.render(f'TITLE SCREEN', True, (255, 255, 255))
+        exit_text = comic_sans.render(f'EXIT', True, (255, 255, 255))
+
         pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 if title_button.collidepoint(pos):
                     return True
                 elif exit_button.collidepoint(pos):
                     return False
 
-        winner_text = comic_sans.render(f'{winner} WON THE GAME!!', True, (255, 255, 255))
-        return_text = comic_sans.render(f'TITLE SCREEN', True, (255, 255, 255))
-        exit_text = comic_sans.render(f'EXIT', True, (255, 255, 255))
-        screen.blit(winner_text, (250, 280))
+
+        if title_button.collidepoint(pos):
+            title_text = comic_sans.render(f'TITLE SCREEN', True, (255, 60, 30))
+
+        elif exit_button.collidepoint(pos):
+            exit_text = comic_sans.render(f'EXIT', True, (255, 60, 30))
+
         # pygame.draw.rect(screen, LIGHT_BLUE, title_button)
         # pygame.draw.rect(screen, LIGHT_BLUE, exit_button)
-        screen.blit(return_text, (140, 500))
+
+        screen.blit(winner_text, (250, 280))
+        screen.blit(title_text, (140, 500))
         screen.blit(exit_text, (890, 500))
 
         pygame.display.flip()
@@ -268,11 +287,17 @@ game_run = True
 while game_run:
     start_screen(359, 269, 367, 57)
 
-    level_counter = level_screen()
-
-    winner = play_screen(level_counter)
-
-    if end_screen(winner):
+    level_tuple = level_screen()
+    if level_tuple == False:
         pass
-    else:
-        game_run = False
+
+    elif level_tuple[0]:
+        level_counter = level_tuple[1]
+        winner = play_screen(level_counter)
+        if end_screen(winner):
+            pass
+        else:
+            game_run = False
+
+
+
