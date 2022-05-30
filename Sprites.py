@@ -160,7 +160,7 @@ class Teacher(pygame.sprite.Sprite):
 
         self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
 
-    def update(self, student_adv, screen):
+    def update(self, player1_adv, screen):
         LIGHT_RED = (219, 0, 135)
         keys = pygame.key.get_pressed()
         dx = 0
@@ -168,7 +168,7 @@ class Teacher(pygame.sprite.Sprite):
 
         # MOVING RIGHT
         if keys[pygame.K_d]:
-            if student_adv:
+            if player1_adv:
                 dx = 5
             else:
                 dx = 6
@@ -186,7 +186,7 @@ class Teacher(pygame.sprite.Sprite):
 
         # MOVING LEFT
         elif keys[pygame.K_a]:
-            if student_adv:
+            if player1_adv:
                 dx = -5
             else:
                 dx = -6
@@ -205,10 +205,6 @@ class Teacher(pygame.sprite.Sprite):
 
         # MOVING UP
         if keys[pygame.K_w]:
-            # if student_adv:
-            #     dy = -5
-            # else:
-            #     dy = -6
             dy = -5
 
             self.up = True
@@ -225,10 +221,6 @@ class Teacher(pygame.sprite.Sprite):
 
         # MOVING DOWN
         if keys[pygame.K_s]:
-            # if student_adv:
-            #     dy = 5
-            # else:
-            #     dy = 6
             dy = 5
 
             self.up = False
@@ -267,7 +259,7 @@ class Teacher(pygame.sprite.Sprite):
 
         # COLLISIONS
         for tile in self.tile_list:
-            if tile[2] == 'Desk':
+            if tile[2] == 'Collision':
                 if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
                     dx = 0
                 if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
@@ -280,7 +272,8 @@ class Teacher(pygame.sprite.Sprite):
         self.tagger_rect.x = self.rect.centerx - 6
         self.tagger_rect.y = self.rect.top - 22
 
-        if student_adv == False:
+        # DRAW TAGGING RECTANGLE
+        if player1_adv == False:
             pygame.draw.rect(screen, LIGHT_RED, self.tagger_rect)
 
 
@@ -339,7 +332,7 @@ class Student(pygame.sprite.Sprite):
 
         self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
 
-    def update(self, student_adv, screen):
+    def update(self, player1_adv, screen):
         LIGHT_BLUE = (52, 171, 235)
         keys = pygame.key.get_pressed()
         dx = 0
@@ -347,7 +340,7 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING RIGHT
         if keys[pygame.K_RIGHT]:
-            if student_adv:
+            if player1_adv:
                 dx = 6
             else:
                 dx = 5
@@ -365,7 +358,7 @@ class Student(pygame.sprite.Sprite):
 
         # MOVING LEFT
         elif keys[pygame.K_LEFT]:
-            if student_adv:
+            if player1_adv:
                 dx = -6
             else:
                 dx = -5
@@ -438,7 +431,7 @@ class Student(pygame.sprite.Sprite):
 
         # COLLISIONS
         for tile in self.tile_list:
-            if tile[2] == 'Desk':
+            if tile[2] == 'Collision':
                 if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
                     dx = 0
                 if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
@@ -452,7 +445,8 @@ class Student(pygame.sprite.Sprite):
         self.tagger_rect.x = self.rect.centerx - 6
         self.tagger_rect.y = self.rect.top - 22
 
-        if student_adv:
+        # DRAW TAGGING RECTANGLE
+        if player1_adv:
             pygame.draw.rect(screen, LIGHT_BLUE, self.tagger_rect)
 
 
@@ -462,7 +456,7 @@ class Layout:
         self.teacher_sheet = SpriteSheet('Teacher.png')
         self.nerd_sheet = SpriteSheet('Nerd.png')
         self.dog_sheet = SpriteSheet('Dog.png')
-        self.door_sheet = SpriteSheet('School_Door.png')
+        self.fence_sheet = SpriteSheet('Fence.png')
 
         self.layout = level_layout
         self.block_size = BLOCK_SIZE
@@ -471,20 +465,16 @@ class Layout:
 
         ############## MAKE IMAGES ################
 
-        self.class_floor = pygame.image.load('School_Floor.png').convert_alpha()
-
         self.school_desk = pygame.image.load('Top_Down_Desk.png').convert_alpha()
         self.school_desk = pygame.transform.scale(self.school_desk, (self.block_size * 1.1, self.block_size))
 
-        # PLAYGROUND
-        self.grass = pygame.image.load('Grass.png').convert_alpha()
-        self.grass = pygame.transform.scale(self.grass, (self.block_size, self.block_size))
+        # YARD
+        self.vert_fence = pygame.image.load('Vert_Fence.png').convert_alpha()
+        self.vert_fence = pygame.transform.scale(self.vert_fence, (self.block_size / 2, self.block_size / 1.5))
 
-        # STREET
-        self.road = pygame.image.load('Road.png').convert_alpha()
-        self.road = pygame.transform.scale(self.road, (self.block_size, self.block_size))
+        self.hor_fence = pygame.image.load('Hor_Fence.png').convert_alpha()
+        self.hor_fence = pygame.transform.scale(self.hor_fence, (self.block_size / 1.5, self.block_size / 2))
 
-        counter = 0
 
         # MAKE LEVEL
         for i, row in enumerate(level_layout):
@@ -492,49 +482,43 @@ class Layout:
                 x_val = j * self.block_size
                 y_val = i * self.block_size
 
-                if col == 'C':
-                    img_rect = self.class_floor.get_rect()
-                    img_rect.x = x_val
-                    img_rect.y = y_val
-                    tile = (self.class_floor, img_rect, 'Floor')
-                    self.tile_list.append(tile)
-
-                elif col == 'G':
-                    img_rect = self.grass.get_rect()
-                    img_rect.x = x_val
-                    img_rect.y = y_val
-                    tile = (self.grass, img_rect, 'Grass')
-                    self.tile_list.append(tile)
-
-                elif col == 'R':
-                    img_rect = self.road.get_rect()
-                    img_rect.x = x_val
-                    img_rect.y = y_val
-                    tile = (self.road, img_rect, 'Road')
-                    self.tile_list.append(tile)
-
-                elif col == 'D':
+                if col == 'D':
                     img_rect = self.school_desk.get_rect()
                     img_rect.x = x_val - 11
                     img_rect.y = y_val
-                    desk_tile = (self.school_desk, img_rect, 'Desk')
+                    desk_tile = (self.school_desk, img_rect, 'Collision')
                     self.tile_list.append(desk_tile)
 
-                elif col == 'P':
-                    self.student = Student(x_val, y_val, self.tile_list, self.student_sheet)
+                elif col == 'V':
+                    img_rect = self.vert_fence.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    vert_tile = (self.vert_fence, img_rect, 'Collision')
+                    self.tile_list.append(vert_tile)
 
-                elif col == 'T':
-                    self.teacher = Teacher(x_val, y_val, self.tile_list, self.teacher_sheet)
+                elif col == 'H':
+                    img_rect = self.hor_fence.get_rect()
+                    img_rect.x = x_val
+                    img_rect.y = y_val
+                    hor_tile = (self.hor_fence, img_rect, 'Collision')
+                    self.tile_list.append(hor_tile)
+
+
+                elif col == '1':
+                    self.player1 = Student(x_val, y_val, self.tile_list, self.student_sheet)
+
+                elif col == '2':
+                    self.player2 = Teacher(x_val, y_val, self.tile_list, self.teacher_sheet)
 
 
 
-    def draw(self, screen, student_adv):
+    def draw(self, screen, player1_adv):
         for tile in self.tile_list:
             screen.blit(tile[0], tile[1])
 
 
-        self.student.update(student_adv, screen)
-        self.teacher.update(student_adv, screen)
+        self.player1.update(player1_adv, screen)
+        self.player2.update(player1_adv, screen)
         # self.player.draw_student(screen)
 
 
