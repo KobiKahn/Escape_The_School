@@ -231,120 +231,11 @@ class Character(pygame.sprite.Sprite):
 
         # CHECK IF PLAYER IS PLAYER 1
         if who == 'P1':
-            if keys[pygame.K_RIGHT]:
-                if player1_adv:
-                    dx = 6
-                else:
-                    dx = 5
-                self.left = False
-                self.right = True
-                now = pygame.time.get_ticks()
-                if (now - self.last) >= self.image_delay:
-                    self.last = now
-
-                if (self.current_frame + 1) < len(self.animation_dict['RT']):
-                    self.current_frame += 1
-                else:
-                    self.current_frame = 0
-                self.image = self.animation_dict['RT'][self.current_frame]
-
-            # MOVING LEFT
-            elif keys[pygame.K_LEFT]:
-                if player1_adv:
-                    dx = -6
-                else:
-                    dx = -5
-
-                self.left = True
-                self.right = False
-                now = pygame.time.get_ticks()
-                if (now - self.last) >= self.image_delay:
-                    self.last = now
-
-                if (self.current_frame + 1) < len(self.animation_dict['LT']):
-                    self.current_frame += 1
-                else:
-                    self.current_frame = 0
-                self.image = self.animation_dict['LT'][self.current_frame]
-
-            # MOVING UP
-            if keys[pygame.K_UP]:
-                dy = -5
-
-                self.up = True
-                self.down = False
-                now = pygame.time.get_ticks()
-                if (now - self.last) >= self.image_delay:
-                    self.last = now
-
-                if (self.current_frame + 1) < len(self.animation_dict['UP']):
-                    self.current_frame += 1
-                else:
-                    self.current_frame = 0
-                self.image = self.animation_dict['UP'][self.current_frame]
-
-            # MOVING DOWN
-            if keys[pygame.K_DOWN]:
-                dy = 5
-
-                self.up = False
-                self.down = True
-
-                now = pygame.time.get_ticks()
-                if (now - self.last) >= self.image_delay:
-                    self.last = now
-
-                if (self.current_frame + 1) < len(self.animation_dict['DN']):
-                    self.current_frame += 1
-                else:
-                    self.current_frame = 0
-                self.image = self.animation_dict['DN'][self.current_frame]
-
-            # COLLISION
-            # COLLISION WITH WALLS
-            if self.rect.left <= 1:
-                dx = 0
-                if keys[pygame.K_RIGHT]:
-                    dx = 5
-
-            elif self.rect.right >= 1049:
-                dx = 0
-                if keys[pygame.K_LEFT]:
-                    dx = -5
-
-            if self.rect.top <= 55:
-                dy = 0
-                if keys[pygame.K_DOWN]:
-                    dy = 5
-            if self.rect.bottom >= 599:
-                dy = 0
-                if keys[pygame.K_UP]:
-                    dy = -5
-
-            # COLLISIONS
-            for tile in self.tile_list:
-                if tile[2] == 'Collision':
-                    if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
-                        dx = 0
-                    if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
-                        dy = 0
-
-            # SET POSITION FOR PLAYER AND TAGGING RECTANGLE
-            self.rect.x += dx
-            self.rect.y += dy
-            self.tagger_rect.x = self.rect.centerx - 6
-            self.tagger_rect.y = self.rect.top - 22
-
-            # DRAW TAGGING RECTANGLE
-            if player1_adv:
-                pygame.draw.rect(screen, LIGHT_BLUE, self.tagger_rect)
-
-        else:
             if keys[pygame.K_d]:
                 if player1_adv:
-                    dx = 5
-                else:
                     dx = 6
+                else:
+                    dx = 5
                 self.left = False
                 self.right = True
                 now = pygame.time.get_ticks()
@@ -360,9 +251,9 @@ class Character(pygame.sprite.Sprite):
             # MOVING LEFT
             elif keys[pygame.K_a]:
                 if player1_adv:
-                    dx = -5
-                else:
                     dx = -6
+                else:
+                    dx = -5
 
                 self.left = True
                 self.right = False
@@ -428,6 +319,115 @@ class Character(pygame.sprite.Sprite):
             if self.rect.bottom >= 599:
                 dy = 0
                 if keys[pygame.K_w]:
+                    dy = -5
+
+            # COLLISIONS
+            for tile in self.tile_list:
+                if tile[2] == 'Collision':
+                    if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
+                        dx = 0
+                    if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
+                        dy = 0
+
+            # SET POSITION FOR PLAYER AND TAGGING RECTANGLE
+            self.rect.x += dx
+            self.rect.y += dy
+            self.tagger_rect.x = self.rect.centerx - 6
+            self.tagger_rect.y = self.rect.top - 22
+
+            # DRAW TAGGING RECTANGLE
+            if player1_adv:
+                pygame.draw.rect(screen, LIGHT_BLUE, self.tagger_rect)
+
+        else:
+            if keys[pygame.K_RIGHT]:
+                if player1_adv:
+                    dx = 5
+                else:
+                    dx = 6
+                self.left = False
+                self.right = True
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['RT']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['RT'][self.current_frame]
+
+            # MOVING LEFT
+            elif keys[pygame.K_LEFT]:
+                if player1_adv:
+                    dx = -5
+                else:
+                    dx = -6
+
+                self.left = True
+                self.right = False
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['LT']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['LT'][self.current_frame]
+
+            # MOVING UP
+            if keys[pygame.K_UP]:
+                dy = -5
+
+                self.up = True
+                self.down = False
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['UP']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['UP'][self.current_frame]
+
+            # MOVING DOWN
+            if keys[pygame.K_DOWN]:
+                dy = 5
+
+                self.up = False
+                self.down = True
+
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['DN']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['DN'][self.current_frame]
+
+            # COLLISION
+            # COLLISION WITH WALLS
+            if self.rect.left <= 1:
+                dx = 0
+                if keys[pygame.K_RIGHT]:
+                    dx = 5
+
+            elif self.rect.right >= 1049:
+                dx = 0
+                if keys[pygame.K_LEFT]:
+                    dx = -5
+
+            if self.rect.top <= 55:
+                dy = 0
+                if keys[pygame.K_DOWN]:
+                    dy = 5
+            if self.rect.bottom >= 599:
+                dy = 0
+                if keys[pygame.K_UP]:
                     dy = -5
 
             # COLLISIONS
