@@ -104,6 +104,352 @@ class Timer:
         return self.width
 
 
+class Character(pygame.sprite.Sprite):
+    def __init__(self, x_val, y_val, tile_list, character):
+        super().__init__()
+        self.student_sheet = SpriteSheet('Student.png')
+        self.teacher_sheet = SpriteSheet('Teacher.png')
+        self.nerd_sheet = SpriteSheet('Nerd.png')
+        self.animal_sheet = SpriteSheet('Dog.png')
+
+        self.x_val = x_val
+        self.y_val = y_val
+        self.tile_list = tile_list
+        self.last = pygame.time.get_ticks()
+        self.image_delay = 100
+        self.current_frame = 0
+
+        self.character = character
+
+        if self.character == 'Teacher':
+            self.teacher_images = self.teacher_sheet.load_grid_images(4, 4, 6, 11, 0, 0, 21, 32, -1)
+            for i in range(len(self.teacher_images)):
+                self.teacher_images[i] = pygame.transform.scale(self.teacher_images[i], (45, 45))
+
+            # STUDENT RUNNING DOWN ANIMATIONS
+            self.teacher_run_dn1 = self.teacher_images[0]
+            self.teacher_run_dn2 = self.teacher_images[1]
+            self.teacher_run_dn3 = self.teacher_images[2]
+            self.teacher_run_dn4 = self.teacher_images[3]
+            # MAKE A RUN DOWN LIST
+            self.teacher_dn_list = [self.teacher_run_dn1, self.teacher_run_dn2, self.teacher_run_dn3]
+
+            # teacher RUNNING RIGHT ANIMATIONS
+            self.teacher_run_rt1 = self.teacher_images[12]
+            self.teacher_run_rt2 = self.teacher_images[13]
+            self.teacher_run_rt3 = self.teacher_images[14]
+            self.teacher_run_rt4 = self.teacher_images[15]
+            # MAKE A RUN RIGHT LIST
+            self.teacher_rt_list = [self.teacher_run_rt1, self.teacher_run_rt2, self.teacher_run_rt3]
+
+            # teacher RUNNING UP ANIMATIONS
+            self.teacher_run_up1 = self.teacher_images[4]
+            self.teacher_run_up2 = self.teacher_images[5]
+            self.teacher_run_up3 = self.teacher_images[6]
+            self.teacher_run_up4 = self.teacher_images[7]
+            # MAKE A RUN UP LIST
+            self.teacher_up_list = [self.teacher_run_up1, self.teacher_run_up2, self.teacher_run_up3]
+
+            # teacher RUNNING LEFT ANIMATIONS
+            self.teacher_run_lt1 = self.teacher_images[8]
+            self.teacher_run_lt2 = self.teacher_images[9]
+            self.teacher_run_lt3 = self.teacher_images[10]
+            self.teacher_run_lt4 = self.teacher_images[11]
+            # MAKE A RUN LEFT LIST
+            self.teacher_lt_list = [self.teacher_run_lt1, self.teacher_run_lt2, self.teacher_run_lt3]
+
+            # STUDENT INITIAL IDLE
+            self.teacher_idle_lt = self.teacher_run_lt3
+            self.image = self.teacher_idle_lt
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+            # MAKE THE TAGGING RECTANGLE
+            self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+            # MAKE ANIMATION DICTIONARY
+            self.animation_dict = {"DN": self.teacher_dn_list, "RT": self.teacher_rt_list, "UP": self.teacher_up_list, "LT": self.teacher_lt_list}
+
+        elif self.character == 'Student':
+            # MAKE STUDENT IMAGES
+            self.student_images = self.student_sheet.load_grid_images(4, 3, 0, 12, 0, 0, 33, 36, -1)
+            for i in range(len(self.student_images)):
+                self.student_images[i] = pygame.transform.scale(self.student_images[i], (45, 45))
+
+            # STUDENT RUNNING DOWN ANIMATIONS
+            self.student_run_dn1 = self.student_images[0]
+            self.student_run_dn2 = self.student_images[1]
+            self.student_run_dn3 = self.student_images[2]
+            # MAKE A RUN DOWN LIST
+            self.student_dn_list = [self.student_run_dn1, self.student_run_dn2, self.student_run_dn3]
+
+            # STUDENT RUNNING RIGHT ANIMATIONS
+            self.student_run_rt1 = self.student_images[3]
+            self.student_run_rt2 = self.student_images[4]
+            self.student_run_rt3 = self.student_images[5]
+            # MAKE A RUN RIGHT LIST
+            self.student_rt_list = [self.student_run_rt1, self.student_run_rt2, self.student_run_rt3]
+
+            # STUDENT RUNNING UP ANIMATIONS
+            self.student_run_up1 = self.student_images[6]
+            self.student_run_up2 = self.student_images[7]
+            self.student_run_up3 = self.student_images[8]
+            # MAKE A RUN UP LIST
+            self.student_up_list = [self.student_run_up1, self.student_run_up2, self.student_run_up3]
+
+            # STUDENT RUNNING LEFT ANIMATIONS
+            self.student_run_lt1 = self.student_images[9]
+            self.student_run_lt2 = self.student_images[10]
+            self.student_run_lt3 = self.student_images[11]
+            # MAKE A RUN LEFT LIST
+            self.student_lt_list = [self.student_run_lt1, self.student_run_lt2, self.student_run_lt3]
+
+            # STUDENT INITIAL IDLE
+            self.student_idle_lt = self.student_run_lt3
+            self.image = self.student_idle_lt
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+            self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+            # MAKE ANIMATION DICT AND RETURN IT
+            self.animation_dict = {"DN": self.student_dn_list, "RT": self.student_rt_list, "UP": self.student_up_list, "LT": self.student_lt_list}
+
+
+
+
+
+    def update(self, screen, player1_adv, who):
+
+        LIGHT_BLUE = (52, 171, 235)
+        LIGHT_RED = (219, 0, 135)
+        dx = 0
+        dy = 0
+        keys = pygame.key.get_pressed()
+
+        # CHECK IF PLAYER IS PLAYER 1
+        if who == 'P1':
+            if keys[pygame.K_RIGHT]:
+                if player1_adv:
+                    dx = 6
+                else:
+                    dx = 5
+                self.left = False
+                self.right = True
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['RT']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['RT'][self.current_frame]
+
+            # MOVING LEFT
+            elif keys[pygame.K_LEFT]:
+                if player1_adv:
+                    dx = -6
+                else:
+                    dx = -5
+
+                self.left = True
+                self.right = False
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['LT']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['LT'][self.current_frame]
+
+            # MOVING UP
+            if keys[pygame.K_UP]:
+                dy = -5
+
+                self.up = True
+                self.down = False
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['UP']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['UP'][self.current_frame]
+
+            # MOVING DOWN
+            if keys[pygame.K_DOWN]:
+                dy = 5
+
+                self.up = False
+                self.down = True
+
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['DN']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['DN'][self.current_frame]
+
+            # COLLISION
+            # COLLISION WITH WALLS
+            if self.rect.left <= 1:
+                dx = 0
+                if keys[pygame.K_RIGHT]:
+                    dx = 5
+
+            elif self.rect.right >= 1049:
+                dx = 0
+                if keys[pygame.K_LEFT]:
+                    dx = -5
+
+            if self.rect.top <= 55:
+                dy = 0
+                if keys[pygame.K_DOWN]:
+                    dy = 5
+            if self.rect.bottom >= 599:
+                dy = 0
+                if keys[pygame.K_UP]:
+                    dy = -5
+
+            # COLLISIONS
+            for tile in self.tile_list:
+                if tile[2] == 'Collision':
+                    if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
+                        dx = 0
+                    if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
+                        dy = 0
+
+            # SET POSITION FOR PLAYER AND TAGGING RECTANGLE
+            self.rect.x += dx
+            self.rect.y += dy
+            self.tagger_rect.x = self.rect.centerx - 6
+            self.tagger_rect.y = self.rect.top - 22
+
+            # DRAW TAGGING RECTANGLE
+            if player1_adv:
+                pygame.draw.rect(screen, LIGHT_BLUE, self.tagger_rect)
+
+        else:
+            if keys[pygame.K_d]:
+                if player1_adv:
+                    dx = 5
+                else:
+                    dx = 6
+                self.left = False
+                self.right = True
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['RT']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['RT'][self.current_frame]
+
+            # MOVING LEFT
+            elif keys[pygame.K_a]:
+                if player1_adv:
+                    dx = -5
+                else:
+                    dx = -6
+
+                self.left = True
+                self.right = False
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['LT']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['LT'][self.current_frame]
+
+            # MOVING UP
+            if keys[pygame.K_w]:
+                dy = -5
+
+                self.up = True
+                self.down = False
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['UP']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['UP'][self.current_frame]
+
+            # MOVING DOWN
+            if keys[pygame.K_s]:
+                dy = 5
+
+                self.up = False
+                self.down = True
+
+                now = pygame.time.get_ticks()
+                if (now - self.last) >= self.image_delay:
+                    self.last = now
+
+                if (self.current_frame + 1) < len(self.animation_dict['DN']):
+                    self.current_frame += 1
+                else:
+                    self.current_frame = 0
+                self.image = self.animation_dict['DN'][self.current_frame]
+
+            # COLLISION
+            # COLLISION WITH WALLS
+            if self.rect.left <= 1:
+                dx = 0
+                if keys[pygame.K_d]:
+                    dx = 5
+
+            elif self.rect.right >= 1049:
+                dx = 0
+                if keys[pygame.K_a]:
+                    dx = -5
+
+            if self.rect.top <= 55:
+                dy = 0
+                if keys[pygame.K_s]:
+                    dy = 5
+            if self.rect.bottom >= 599:
+                dy = 0
+                if keys[pygame.K_w]:
+                    dy = -5
+
+            # COLLISIONS
+            for tile in self.tile_list:
+                if tile[2] == 'Collision':
+                    if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
+                        dx = 0
+                    if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
+                        dy = 0
+
+            self.rect.x += dx
+            self.rect.y += dy
+
+            # RECTANGLE THAT SHOWS WHO IS TAGGER
+            self.tagger_rect.x = self.rect.centerx - 6
+            self.tagger_rect.y = self.rect.top - 22
+
+            # DRAW TAGGING RECTANGLE
+            if player1_adv == False:
+                pygame.draw.rect(screen, LIGHT_RED, self.tagger_rect)
+
+
 class Teacher(pygame.sprite.Sprite):
     def __init__(self, x_val, y_val, tile_list, sprite_sheet):
         super().__init__()
@@ -451,16 +797,20 @@ class Student(pygame.sprite.Sprite):
 
 
 class Layout:
-    def __init__(self, level_layout, BLOCK_SIZE):
+    def __init__(self, level_layout, BLOCK_SIZE, char1, char2):
+        # print(char1)
+        # print(char2)
         self.student_sheet = SpriteSheet('Student.png')
         self.teacher_sheet = SpriteSheet('Teacher.png')
         self.nerd_sheet = SpriteSheet('Nerd.png')
-        self.dog_sheet = SpriteSheet('Dog.png')
+        self.animal_sheet = SpriteSheet('Dog.png')
         self.fence_sheet = SpriteSheet('Fence.png')
 
         self.layout = level_layout
         self.block_size = BLOCK_SIZE
         self.tile_list = []
+        self.char1 = char1
+        self.char2 = char2
 
 
         ############## MAKE IMAGES ################
@@ -505,10 +855,11 @@ class Layout:
 
 
                 elif col == '1':
-                    self.player1 = Student(x_val, y_val, self.tile_list, self.student_sheet)
+                    # self.player1 = Student(x_val, y_val, self.tile_list, self.student_sheet)
+                    self.player1 = Character(x_val, y_val, self.tile_list, self.char1)
 
                 elif col == '2':
-                    self.player2 = Teacher(x_val, y_val, self.tile_list, self.teacher_sheet)
+                    self.player2 = Character(x_val, y_val, self.tile_list, self.char2)
 
 
 
@@ -517,8 +868,8 @@ class Layout:
             screen.blit(tile[0], tile[1])
 
 
-        self.player1.update(player1_adv, screen)
-        self.player2.update(player1_adv, screen)
+        self.player1.update(screen, player1_adv, 'P1')
+        self.player2.update(screen, player1_adv, 'P2')
         # self.player.draw_student(screen)
 
 

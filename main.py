@@ -148,6 +148,7 @@ def character_screen():
                     p2_ready = True
 
                 if p1_ready and p2_ready and back_button.collidepoint(pos) and player1_select != None and player2_select != None:
+                    print(player1_select, player2_select)
                     return(player1_select, player2_select)
 
 
@@ -287,7 +288,7 @@ def level_screen():
         clock.tick(FPS)
 
 
-def play_screen(level_counter):
+def play_screen(level_counter, char1, char2):
     screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
     pygame.display.set_caption('Stop_The_Student')
     # INITIAL VALS
@@ -302,14 +303,15 @@ def play_screen(level_counter):
     running = True
     timer = 0
     player1_adv = False
+    # print(char1, char2)
 
     # ASSIGN LEVELS
     level_select = []
-    level1 = Layout(LEVEL_1, BLOCK_SIZE)
+    level1 = Layout(LEVEL_1, BLOCK_SIZE, char1, char2)
     level_select.append(level1)
-    level2 = Layout(LEVEL_2, BLOCK_SIZE)
+    level2 = Layout(LEVEL_2, BLOCK_SIZE, char1, char2)
     level_select.append(level2)
-    level3 = Layout(LEVEL_3, BLOCK_SIZE)
+    level3 = Layout(LEVEL_3, BLOCK_SIZE, char1, char2)
     level_select.append(level3)
 
     # BACKGROUND IMAGES
@@ -472,6 +474,10 @@ level_select_text = pygame.font.SysFont('Comic Sans', 60)
 clock = pygame.time.Clock()
 
 game_run = True
+# BASE CHARACTERS IF PERSON DOESNT SELECT NEW ONES
+char1 = 'Student'
+char2 = 'Teacher'
+
 # MAIN LOOP
 while game_run:
     if start_screen(359, 269, 367, 57):
@@ -482,13 +488,13 @@ while game_run:
 
         elif level_tuple[0]:
             level_counter = level_tuple[1]
-            winner = play_screen(level_counter)
+            winner = play_screen(level_counter, char1, char2)
             if end_screen(winner):
                 pass
             else:
                 game_run = False
     else:
-        print(character_screen())
+        char1, char2 = character_screen()
 
 
 
