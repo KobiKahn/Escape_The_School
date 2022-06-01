@@ -121,6 +121,7 @@ class Character(pygame.sprite.Sprite):
 
         self.character = character
 
+        # TEACHER ANIMATIONS
         if self.character == 'Teacher':
             self.teacher_images = self.teacher_sheet.load_grid_images(4, 4, 6, 11, 0, 0, 21, 32, -1)
             for i in range(len(self.teacher_images)):
@@ -171,6 +172,7 @@ class Character(pygame.sprite.Sprite):
             # MAKE ANIMATION DICTIONARY
             self.animation_dict = {"DN": self.teacher_dn_list, "RT": self.teacher_rt_list, "UP": self.teacher_up_list, "LT": self.teacher_lt_list}
 
+        # STUDENT ANIMATIONS
         elif self.character == 'Student':
             # MAKE STUDENT IMAGES
             self.student_images = self.student_sheet.load_grid_images(4, 3, 0, 12, 0, 0, 33, 36, -1)
@@ -214,8 +216,112 @@ class Character(pygame.sprite.Sprite):
 
             self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
 
-            # MAKE ANIMATION DICT AND RETURN IT
+            # MAKE ANIMATION DICT
             self.animation_dict = {"DN": self.student_dn_list, "RT": self.student_rt_list, "UP": self.student_up_list, "LT": self.student_lt_list}
+
+        # NERD ANIMATIONS
+        elif self.character == 'Nerd':
+            # MAKE NERD IMAGES
+            self.nerd_images = self.nerd_sheet.load_grid_images(4, 4, 10, 15, 11, 16, 33, 32, -1)
+
+            for i in range(len(self.nerd_images)):
+                self.nerd_images[i] = pygame.transform.scale(self.nerd_images[i], (45, 45))
+
+            # NERD RUNNING DOWN ANIMATIONS
+            self.nerd_run_dn1 = self.nerd_images[0]
+            self.nerd_run_dn2 = self.nerd_images[4]
+            self.nerd_run_dn3 = self.nerd_images[8]
+            self.nerd_run_dn4 = self.nerd_images[12]
+            # MAKE A RUN DOWN LIST
+            self.nerd_dn_list = [self.nerd_run_dn1, self.nerd_run_dn2, self.nerd_run_dn3, self.nerd_run_dn4]
+
+            # NERD RUNNING RIGHT ANIMATIONS
+            self.nerd_run_rt1 = self.nerd_images[3]
+            self.nerd_run_rt2 = self.nerd_images[7]
+            self.nerd_run_rt3 = self.nerd_images[11]
+            self.nerd_run_rt4 = self.nerd_images[15]
+
+            # MAKE A RUN RIGHT LIST
+            self.nerd_rt_list = [self.nerd_run_rt1, self.nerd_run_rt2, self.nerd_run_rt3, self.nerd_run_rt4]
+
+            # NERD RUNNING UP ANIMATIONS
+            self.nerd_run_up1 = self.nerd_images[2]
+            self.nerd_run_up2 = self.nerd_images[6]
+            self.nerd_run_up3 = self.nerd_images[10]
+            self.nerd_run_up4 = self.nerd_images[14]
+            # MAKE A RUN UP LIST
+            self.nerd_up_list = [self.nerd_run_up1, self.nerd_run_up2, self.nerd_run_up3, self.nerd_run_up4]
+
+            # NERD RUNNING LEFT ANIMATIONS
+            self.nerd_run_lt1 = self.nerd_images[1]
+            self.nerd_run_lt2 = self.nerd_images[5]
+            self.nerd_run_lt3 = self.nerd_images[9]
+            self.nerd_run_lt4 = self.nerd_images[13]
+            # MAKE A RUN LEFT LIST
+            self.nerd_lt_list = [self.nerd_run_lt1, self.nerd_run_lt2, self.nerd_run_lt3, self.nerd_run_lt4]
+
+            # NERD INITIAL IDLE
+            self.nerd_idle_lt = self.nerd_run_lt3
+            self.image = self.nerd_idle_lt
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+            self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+            # MAKE ANIMATION DICT
+            self.animation_dict = {"DN": self.nerd_dn_list, "RT": self.nerd_rt_list, "UP": self.nerd_up_list, "LT": self.nerd_lt_list}
+
+
+        # CAT ANIMATIONS
+        elif self.character == 'Cat':
+            # CAT RUNNING DOWN ANIMATIONS
+            self.cat_dn_list = self.animal_sheet.load_grid_images(1, 3, 106, 20, 4, 0, 12, 27, -1)
+            for i in range(len(self.cat_dn_list)):
+                self.cat_dn_list[i] = pygame.transform.scale(self.cat_dn_list[i], (45, 45))
+
+            self.cat_run_dn1 = self.cat_dn_list[0]
+            self.cat_run_dn2 = self.cat_dn_list[1]
+            self.cat_run_dn3 = self.cat_dn_list[2]
+
+            # CAT RUNNING RIGHT ANIMATIONS
+            self.cat_rt_list = self.animal_sheet.load_grid_images(1, 3, 98, 4, 71, 0, 28, 24, -1)
+            for i in range(len(self.cat_rt_list)):
+                self.cat_rt_list[i] = pygame.transform.scale(self.cat_rt_list[i], (45, 45))
+
+            self.cat_run_rt1 = self.cat_rt_list[0]
+            self.cat_run_rt2 = self.cat_rt_list[1]
+            self.cat_run_rt3 = self.cat_rt_list[2]
+
+            # CAT RUNNING UP ANIMATIONS
+            self.cat_up_list = self.animal_sheet.load_grid_images(1, 3, 106, 20, 103, 0, 12, 24, -1)
+            for i in range(len(self.cat_up_list)):
+                self.cat_up_list[i] = pygame.transform.scale(self.cat_up_list[i], (45, 45))
+
+            self.cat_run_up1 = self.cat_up_list[0]
+            self.cat_run_up2 = self.cat_up_list[1]
+            self.cat_run_up3 = self.cat_up_list[2]
+
+            # CAT RUNNING LEFT ANIMATIONS
+            self.cat_lt_list = self.animal_sheet.load_grid_images(1, 3, 98, 4, 39, 0, 28, 24, -1)
+            for i in range(len(self.cat_lt_list)):
+                self.cat_lt_list[i] = pygame.transform.scale(self.cat_lt_list[i], (45, 45))
+
+            self.cat_run_lt1 = self.cat_lt_list[0]
+            self.cat_run_lt2 = self.cat_lt_list[1]
+            self.cat_run_lt3 = self.cat_lt_list[2]
+
+            # CAT INITIAL IDLE
+            self.cat_idle_lt = self.cat_run_lt2
+            self.image = self.cat_idle_lt
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+            self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+            # MAKE ANIMATION DICT
+            self.animation_dict = {"DN": self.cat_dn_list, "RT": self.cat_rt_list, "UP": self.cat_up_list, "LT": self.cat_lt_list}
 
 
 

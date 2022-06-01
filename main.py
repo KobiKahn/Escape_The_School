@@ -302,7 +302,11 @@ def play_screen(level_counter, char1, char2):
 
     running = True
     timer = 0
-    player1_adv = False
+    coin = random.randint(0,1)
+    if coin == 0:
+        player1_adv = False
+    else:
+        player1_adv = True
     # print(char1, char2)
 
     # ASSIGN LEVELS
