@@ -323,7 +323,105 @@ class Character(pygame.sprite.Sprite):
             # MAKE ANIMATION DICT
             self.animation_dict = {"DN": self.cat_dn_list, "RT": self.cat_rt_list, "UP": self.cat_up_list, "LT": self.cat_lt_list}
 
+            # DOG ANIMATIONS
+        elif self.character == 'Dog':
+            # DOG RUNNING DOWN ANIMATIONS
 
+            self.dog_dn_list = self.animal_sheet.load_grid_images(1, 3, 9, 18, 130, 0, 14, 29, -1)
+            for i in range(len(self.dog_dn_list)):
+                self.dog_dn_list[i] = pygame.transform.scale(self.dog_dn_list[i], (45, 45))
+
+            self.dog_run_dn1 = self.dog_dn_list[0]
+            self.dog_run_dn2 = self.dog_dn_list[1]
+            self.dog_run_dn3 = self.dog_dn_list[2]
+
+            # DOG RUNNING RIGHT ANIMATIONS
+            self.dog_rt_list = self.animal_sheet.load_grid_images(1, 3, 2, 2, 196, 0, 30, 28, -1)
+            for i in range(len(self.dog_rt_list)):
+                self.dog_rt_list[i] = pygame.transform.scale(self.dog_rt_list[i], (45, 45))
+
+            self.dog_run_rt1 = self.dog_rt_list[0]
+            self.dog_run_rt2 = self.dog_rt_list[1]
+            self.dog_run_rt3 = self.dog_rt_list[2]
+
+            # DOG RUNNING UP ANIMATIONS
+            self.dog_up_list = self.animal_sheet.load_grid_images(1, 3, 9, 18, 229, 0, 14, 27, -1)
+            for i in range(len(self.dog_up_list)):
+                self.dog_up_list[i] = pygame.transform.scale(self.dog_up_list[i], (45, 45))
+
+            self.dog_run_up1 = self.dog_up_list[0]
+            self.dog_run_up2 = self.dog_up_list[1]
+            self.dog_run_up3 = self.dog_up_list[2]
+
+            # DOG RUNNING LEFT ANIMATIONS
+            self.dog_lt_list = self.animal_sheet.load_grid_images(1, 3, 0, 2, 165, 0, 30, 27, -1)
+            for i in range(len(self.dog_lt_list)):
+                self.dog_lt_list[i] = pygame.transform.scale(self.dog_lt_list[i], (45, 45))
+
+            self.dog_run_lt1 = self.dog_lt_list[0]
+            self.dog_run_lt2 = self.dog_lt_list[1]
+            self.dog_run_lt3 = self.dog_lt_list[2]
+
+            # DOG INITIAL IDLE
+            self.dog_idle_lt = self.dog_run_lt2
+            self.image = self.dog_idle_lt
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+            self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+            # MAKE ANIMATION DICT
+            self.animation_dict = {"DN": self.dog_dn_list, "RT": self.dog_rt_list, "UP": self.dog_up_list, "LT": self.dog_lt_list}
+
+        elif self.character == 'Mouse':
+            # MOUSE RUNNING DOWN ANIMATIONS
+            self.mouse_dn_list = self.animal_sheet.load_grid_images(1, 3, 9, 16, 1, 0, 14, 31, -1)
+            for i in range(len(self.mouse_dn_list)):
+                self.mouse_dn_list[i] = pygame.transform.scale(self.mouse_dn_list[i], (40, 45))
+
+            self.mouse_run_dn1 = self.mouse_dn_list[0]
+            self.mouse_run_dn2 = self.mouse_dn_list[1]
+            self.mouse_run_dn3 = self.mouse_dn_list[2]
+
+            # MOUSE RUNNING RIGHT ANIMATIONS
+            self.mouse_rt_list = self.animal_sheet.load_grid_images(1, 3, 1, 2, 76, 0, 30, 20, -1)
+            for i in range(len(self.mouse_rt_list)):
+                self.mouse_rt_list[i] = pygame.transform.scale(self.mouse_rt_list[i], (45, 45))
+
+            self.mouse_run_rt1 = self.mouse_rt_list[0]
+            self.mouse_run_rt2 = self.mouse_rt_list[1]
+            self.mouse_run_rt3 = self.mouse_rt_list[2]
+
+            # MOUSE RUNNING UP ANIMATIONS
+            self.mouse_up_list = self.animal_sheet.load_grid_images(1, 3, 10, 18, 96, 0, 13, 29, -1)
+            for i in range(len(self.mouse_up_list)):
+                self.mouse_up_list[i] = pygame.transform.scale(self.mouse_up_list[i], (40, 45))
+
+            self.mouse_run_up1 = self.mouse_up_list[0]
+            self.mouse_run_up2 = self.mouse_up_list[1]
+            self.mouse_run_up3 = self.mouse_up_list[2]
+
+            # MOUSE RUNNING LEFT ANIMATIONS
+            self.mouse_lt_list = self.animal_sheet.load_grid_images(1, 3, 0, 1, 47, 0, 31, 17, -1)
+            for i in range(len(self.mouse_lt_list)):
+                self.mouse_lt_list[i] = pygame.transform.scale(self.mouse_lt_list[i], (45, 45))
+
+            self.mouse_run_lt1 = self.mouse_lt_list[0]
+            self.mouse_run_lt2 = self.mouse_lt_list[1]
+            self.mouse_run_lt3 = self.mouse_lt_list[2]
+
+            # MOUSE INITIAL IDLE
+            self.mouse_idle_lt = self.mouse_run_lt2
+            self.image = self.mouse_idle_lt
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+            self.tagger_rect = pygame.Rect(self.rect.centerx, self.rect.top - 10, 20, 20)
+
+            # MAKE ANIMATION DICT
+            self.animation_dict = {"DN": self.mouse_dn_list, "RT": self.mouse_rt_list, "UP": self.mouse_up_list, "LT": self.mouse_lt_list}
 
 
 
