@@ -429,7 +429,7 @@ class Character(pygame.sprite.Sprite):
 
             # COLLISIONS
             for tile in self.tile_list:
-                if tile[2] == 'Collision':
+                if tile[-1] == 'Collision':
                     if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.rect.width - 5, self.rect.height - 5):
                         dx = 0
                     if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.rect.width - 5, self.rect.height - 5):
