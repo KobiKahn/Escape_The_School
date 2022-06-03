@@ -14,6 +14,8 @@ def start_screen(lx, ly, lw, lh):
 
     clock = pygame.time.Clock()
 
+    click_sound = pygame.mixer.Sound('Toom Click.wav')
+
     while running:
         title_background = pygame.image.load('Tag_Title_Screen.png').convert_alpha()
         level_rect = pygame.Rect(lx, ly, lw, lh)
@@ -27,6 +29,7 @@ def start_screen(lx, ly, lw, lh):
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONUP:
+                click_sound.play()
                 if level_rect.collidepoint(pos):
                     running = False
                     return(True)
@@ -64,6 +67,8 @@ def character_screen():
     p1_ready = False
     p2_ready = False
 
+    click_sound = pygame.mixer.Sound('Toom Click.wav')
+
     while running:
         pos = pygame.mouse.get_pos()
 
@@ -99,6 +104,7 @@ def character_screen():
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONUP:
+                click_sound.play()
                 # PLAYER 1 COLLISION
                 if player1_student.collidepoint(pos):
                     player1_select = 'Student'
@@ -224,6 +230,9 @@ def level_screen():
     running = True
 
     clock = pygame.time.Clock()
+
+    click_sound = pygame.mixer.Sound('Toom Click.wav')
+
     while running:
         pos = pygame.mouse.get_pos()
 
@@ -242,6 +251,7 @@ def level_screen():
         for event in pygame.event.get():
 
             if event.type == pygame.MOUSEBUTTONUP:
+                click_sound.play()
                 if level1_button.collidepoint(pos):
                     running = False
                     return (True, 0)
@@ -352,7 +362,15 @@ def play_screen(level_counter, char1, char2):
 
     clock = pygame.time.Clock()
 
+    # SOUND EFFECTS
+    # fight_music = pygame.mixer.Sound('fight_looped.wav')
+    fight_music = pygame.mixer.Sound('fato_shadow_-_fight_theme_dubstep.mp3')
+    fight_music.set_volume(0.3)
+
+    car_crash = pygame.mixer.Sound('Car Crash Sound.mp3')
+
     while running:
+        fight_music.play(-1)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -416,6 +434,7 @@ def play_screen(level_counter, char1, char2):
                 if pygame.sprite.spritecollide(player1_sprite, player2_group, True):
                     # print('PLAYER 1 WON!!')
                     running = False
+                    fight_music.stop()
                     return('PLAYER 1')
 
         else:
@@ -423,17 +442,23 @@ def play_screen(level_counter, char1, char2):
                 if pygame.sprite.spritecollide(player2_sprite, player1_group, True):
                     # print('PLAYER 2 WON!!')
                     running = False
+                    fight_music.stop()
                     return('PLAYER 2')
 
         if level_counter == 2:
             for player1_sprite in player1_group:
+
                 if pygame.sprite.spritecollide(player1_sprite, car_group, True):
                     running = False
+                    fight_music.stop()
+                    car_crash.play()
                     return('PLAYER 2')
 
             for player2_sprite in player2_group:
                 if pygame.sprite.spritecollide(player2_sprite, car_group, True):
                     running = False
+                    fight_music.stop()
+                    car_crash.play()
                     return('PLAYER 1')
 
         pygame.display.flip()
@@ -516,8 +541,13 @@ game_run = True
 char1 = 'Student'
 char2 = 'Teacher'
 
+jazz_sound = pygame.mixer.Sound('jazzcrash.ogg')
+x = 0
 # MAIN LOOP
 while game_run:
+    x += 1
+    if x == 1:
+        jazz_sound.play()
     if start_screen(359, 269, 367, 57):
         level_tuple = level_screen()
 
@@ -526,8 +556,11 @@ while game_run:
 
         elif level_tuple[0]:
             level_counter = level_tuple[1]
+            jazz_sound.stop()
             winner = play_screen(level_counter, char1, char2)
+            jazz_sound.play()
             if end_screen(winner):
+
                 pass
             else:
                 game_run = False

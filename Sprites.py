@@ -108,7 +108,7 @@ class Cars(pygame.sprite.Sprite):
         super().__init__()
         self.car_sheet = SpriteSheet('Cars.png')
 
-        self.x_val = random.randint(-40, 0)
+        self.x_val = random.randint(-100, -50)
         self.y_val = y
         self.vel = vel
         self.car_type = car_type
@@ -179,7 +179,7 @@ class Cars(pygame.sprite.Sprite):
         self.rect.x += self.vel
 
         if self.rect.x >= 1050:
-            self.rect.x = random.randint(-30, 0)
+            self.rect.x = random.randint(-100, -50)
             self.rect.y = random.randint(50, 550)
 
 
@@ -1148,19 +1148,19 @@ class Layout:
                     self.player2 = Character(x_val, y_val, self.tile_list, self.char2)
 
                 elif col == 'b':
-                    self.black_car = Cars(x_val, y_val, 3, 'black')
+                    self.black_car = Cars(x_val, y_val, 4, 'black')
 
                 elif col == 'w':
-                    self.white_car = Cars(x_val, y_val, 3, 'white')
+                    self.white_car = Cars(x_val, y_val, 7, 'white')
 
                 elif col == 'y':
-                    self.yellow_car = Cars(x_val, y_val, 3, 'yellow')
+                    self.yellow_car = Cars(x_val, y_val, 2, 'yellow')
 
                 elif col == 'g':
                     self.green_car = Cars(x_val, y_val, 3, 'green')
 
                 elif col == 'r':
-                    self.red_car = Cars(x_val, y_val, 3, 'red')
+                    self.red_car = Cars(x_val, y_val, 5, 'red')
 
 
     def draw(self, screen, player1_adv):
