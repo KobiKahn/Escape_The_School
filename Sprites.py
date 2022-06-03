@@ -1,6 +1,6 @@
 import pygame, sys
 from Background import *
-
+import random
 
 class SpriteSheet:
 
@@ -102,6 +102,88 @@ class Timer:
     def draw_rect(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
         return self.width
+
+class Cars(pygame.sprite.Sprite):
+    def __init__(self, x, y, vel, car_type):
+        super().__init__()
+        self.car_sheet = SpriteSheet('Cars.png')
+
+        self.x_val = random.randint(-40, 0)
+        self.y_val = y
+        self.vel = vel
+        self.car_type = car_type
+
+        # 10 by 2
+        # 83 by 59
+        # start x 20
+        # start y 1
+        # y padding = 4
+        # x padding = 23
+        car_list = self.car_sheet.load_grid_images(10, 2, 20, 23, 1, 4, 83, 59, -1)
+
+        # MAKE EVERY INDIVIDUAL COLOR CAR
+        self.black_car_list = []
+        self.white_car_list = []
+        self.yellow_car_list = []
+        self.green_car_list = []
+        self.red_car_list = []
+
+        self.black_car_list.extend([car_list[0], car_list[1], car_list[3], car_list[14]])
+        self.white_car_list.extend([car_list[4], car_list[8], car_list[9], car_list[18], car_list[19]])
+        self.yellow_car_list.extend([car_list[2], car_list[6], car_list[17]])
+        self.green_car_list.extend([car_list[5], car_list[15]])
+        self.red_car_list.extend([car_list[7], car_list[11], car_list[16]])
+
+        if self.car_type == 'black':
+            # SET RANDOM CAR
+            random_car = random.randint(0, (len(self.black_car_list) - 1))
+            self.image = self.black_car_list[random_car]
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+        elif self.car_type == 'white':
+            # SET RANDOM CAR
+            random_car = random.randint(0, (len(self.white_car_list) - 1))
+            self.image = self.white_car_list[random_car]
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+        elif self.car_type == 'yellow':
+            # SET RANDOM CAR
+            random_car = random.randint(0, (len(self.yellow_car_list) - 1))
+            self.image = self.yellow_car_list[random_car]
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+        elif self.car_type == 'green':
+            # SET RANDOM CAR
+            random_car = random.randint(0, (len(self.green_car_list) - 1))
+            self.image = self.green_car_list[random_car]
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+        elif self.car_type == 'red':
+            # SET RANDOM CAR
+            random_car = random.randint(0, (len(self.red_car_list) - 1))
+            self.image = self.red_car_list[random_car]
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x_val
+            self.rect.y = self.y_val
+
+    def update(self):
+
+        self.rect.x += self.vel
+
+        if self.rect.x >= 1050:
+            self.rect.x = random.randint(-30, 0)
+            self.rect.y = random.randint(50, 550)
+
+
+
 
 
 class Character(pygame.sprite.Sprite):
@@ -1065,6 +1147,20 @@ class Layout:
                 elif col == '2':
                     self.player2 = Character(x_val, y_val, self.tile_list, self.char2)
 
+                elif col == 'b':
+                    self.black_car = Cars(x_val, y_val, 3, 'black')
+
+                elif col == 'w':
+                    self.white_car = Cars(x_val, y_val, 3, 'white')
+
+                elif col == 'y':
+                    self.yellow_car = Cars(x_val, y_val, 3, 'yellow')
+
+                elif col == 'g':
+                    self.green_car = Cars(x_val, y_val, 3, 'green')
+
+                elif col == 'r':
+                    self.red_car = Cars(x_val, y_val, 3, 'red')
 
 
     def draw(self, screen, player1_adv):

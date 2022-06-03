@@ -323,7 +323,10 @@ def play_screen(level_counter, char1, char2):
 
     yard_bg = pygame.image.load('Grass_Level.png').convert_alpha()
 
+    road_bg = pygame.image.load('Road_Level.png').convert_alpha()
+
     # SPRITE GROUPS
+    car_group = pygame.sprite.Group()
     player1_group = pygame.sprite.Group()
     player2_group = pygame.sprite.Group()
     if level_counter == 0:
@@ -333,6 +336,16 @@ def play_screen(level_counter, char1, char2):
     elif level_counter == 1:
         player1_group.add(level2.player1)
         player2_group.add(level2.player2)
+
+    elif level_counter == 2:
+        player1_group.add(level3.player1)
+        player2_group.add(level3.player2)
+        car_group.add(level3.black_car)
+        car_group.add(level3.white_car)
+        car_group.add(level3.yellow_car)
+        car_group.add(level3.green_car)
+        car_group.add(level3.red_car)
+
 
     timer_outline = pygame.image.load('Timer_Outline.png').convert_alpha()
     timer_outline = pygame.transform.scale(timer_outline, (220, 55))
@@ -383,9 +396,19 @@ def play_screen(level_counter, char1, char2):
             player1_group.draw(screen)
             player2_group.draw(screen)
 
+        elif level_counter == 2:
+            screen.blit(road_bg, (0,0))
+            player1_group.draw(screen)
+            player2_group.draw(screen)
+            car_group.draw(screen)
+            car_group.update()
+            # for car in car_group():
+            #     car.update()
 
         level = level_select[level_counter]
         level.draw(screen, player1_adv)
+
+
 
         # COLLISION
         if player1_adv:
@@ -401,6 +424,17 @@ def play_screen(level_counter, char1, char2):
                     # print('PLAYER 2 WON!!')
                     running = False
                     return('PLAYER 2')
+
+        if level_counter == 2:
+            for player1_sprite in player1_group:
+                if pygame.sprite.spritecollide(player1_sprite, car_group, True):
+                    running = False
+                    return('PLAYER 2')
+
+            for player2_sprite in player2_group:
+                if pygame.sprite.spritecollide(player2_sprite, car_group, True):
+                    running = False
+                    return('PLAYER 1')
 
         pygame.display.flip()
         clock.tick(FPS)
