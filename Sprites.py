@@ -12,7 +12,6 @@ class SpriteSheet:
             print(f"Unable to load spritesheet image: {filename}")
             raise SystemExit(e)
 
-
     def image_at(self, rectangle, colorkey=None):
         """Load a specific image from a specific rectangle."""
         """rectangle is a tuple with (x, y, x+offset, y+offset)"""
@@ -209,39 +208,43 @@ class Character(pygame.sprite.Sprite):
             for i in range(len(self.teacher_images)):
                 self.teacher_images[i] = pygame.transform.scale(self.teacher_images[i], (45, 45))
 
-            # STUDENT RUNNING DOWN ANIMATIONS
-            self.teacher_run_dn1 = self.teacher_images[0]
-            self.teacher_run_dn2 = self.teacher_images[1]
-            self.teacher_run_dn3 = self.teacher_images[2]
-            self.teacher_run_dn4 = self.teacher_images[3]
-            # MAKE A RUN DOWN LIST
-            self.teacher_dn_list = [self.teacher_run_dn1, self.teacher_run_dn2, self.teacher_run_dn3]
 
-            # teacher RUNNING RIGHT ANIMATIONS
+            # TEACHER RUNNING DOWN ANIMATIONS
+            self.teacher_dn_images = self.teacher_sheet.load_grid_images(1, 4, 6, 11, 0, 0, 21, 32)
+            for i in range(len(self.teacher_dn_images)):
+                self.teacher_dn_images[i] = pygame.transform.scale(self.teacher_images[i], (45, 45))
+            self.teacher_run_dn1 = self.teacher_dn_images[0]
+            self.teacher_run_dn2 = self.teacher_dn_images[1]
+            self.teacher_run_dn3 = self.teacher_dn_images[2]
+            self.teacher_run_dn4 = self.teacher_dn_images[3]
+            # MAKE A RUN DOWN LIST
+            self.teacher_dn_list = [self.teacher_run_dn1, self.teacher_run_dn2, self.teacher_run_dn3, self.teacher_run_dn4]
+
+            # TEACHER RUNNING RIGHT ANIMATIONS
             self.teacher_run_rt1 = self.teacher_images[12]
             self.teacher_run_rt2 = self.teacher_images[13]
             self.teacher_run_rt3 = self.teacher_images[14]
             self.teacher_run_rt4 = self.teacher_images[15]
             # MAKE A RUN RIGHT LIST
-            self.teacher_rt_list = [self.teacher_run_rt1, self.teacher_run_rt2, self.teacher_run_rt3]
+            self.teacher_rt_list = [self.teacher_run_rt1, self.teacher_run_rt2, self.teacher_run_rt3, self.teacher_run_rt4]
 
-            # teacher RUNNING UP ANIMATIONS
+            # TEACHER RUNNING UP ANIMATIONS
             self.teacher_run_up1 = self.teacher_images[4]
             self.teacher_run_up2 = self.teacher_images[5]
             self.teacher_run_up3 = self.teacher_images[6]
             self.teacher_run_up4 = self.teacher_images[7]
             # MAKE A RUN UP LIST
-            self.teacher_up_list = [self.teacher_run_up1, self.teacher_run_up2, self.teacher_run_up3]
+            self.teacher_up_list = [self.teacher_run_up1, self.teacher_run_up2, self.teacher_run_up3, self.teacher_run_up4]
 
-            # teacher RUNNING LEFT ANIMATIONS
+            # TEACHER RUNNING LEFT ANIMATIONS
             self.teacher_run_lt1 = self.teacher_images[8]
             self.teacher_run_lt2 = self.teacher_images[9]
             self.teacher_run_lt3 = self.teacher_images[10]
             self.teacher_run_lt4 = self.teacher_images[11]
             # MAKE A RUN LEFT LIST
-            self.teacher_lt_list = [self.teacher_run_lt1, self.teacher_run_lt2, self.teacher_run_lt3]
+            self.teacher_lt_list = [self.teacher_run_lt1, self.teacher_run_lt2, self.teacher_run_lt3, self.teacher_run_lt4]
 
-            # STUDENT INITIAL IDLE
+            # TEACHER INITIAL IDLE
             self.teacher_idle_lt = self.teacher_run_lt3
             self.image = self.teacher_idle_lt
             self.rect = self.image.get_rect()
@@ -458,13 +461,19 @@ class Character(pygame.sprite.Sprite):
 
         elif self.character == 'Mouse':
             # MOUSE RUNNING DOWN ANIMATIONS
-            self.mouse_dn_list = self.animal_sheet.load_grid_images(1, 3, 9, 16, 1, 0, 14, 31, -1)
+            self.mouse_dn_list = []
+            self.mouse_run_dn1 = self.animal_sheet.image_at((10, 2, 15, 29), -1)
+            # self.mouse_run_dn2 = self.animal_sheet.image_at((40, 6, 15, 26), -1)
+            # self.mouse_run_dn3 = self.animal_sheet.image_at((74, 6, 15, 26), -1)
+
+            self.mouse_dn_list.append(self.mouse_run_dn1)
+            # self.mouse_dn_list.append(self.mouse_run_dn2)
+            # self.mouse_dn_list.append(self.mouse_run_dn3)
+            # self.animal_sheet.load_grid_images(1, 3, 10, 15, 1, 0, 15, 29, -1)
             for i in range(len(self.mouse_dn_list)):
                 self.mouse_dn_list[i] = pygame.transform.scale(self.mouse_dn_list[i], (40, 45))
 
-            self.mouse_run_dn1 = self.mouse_dn_list[0]
-            self.mouse_run_dn2 = self.mouse_dn_list[1]
-            self.mouse_run_dn3 = self.mouse_dn_list[2]
+
 
             # MOUSE RUNNING RIGHT ANIMATIONS
             self.mouse_rt_list = self.animal_sheet.load_grid_images(1, 3, 1, 2, 76, 0, 30, 20, -1)
@@ -490,11 +499,11 @@ class Character(pygame.sprite.Sprite):
                 self.mouse_lt_list[i] = pygame.transform.scale(self.mouse_lt_list[i], (45, 45))
 
             self.mouse_run_lt1 = self.mouse_lt_list[0]
-            self.mouse_run_lt2 = self.mouse_lt_list[1]
-            self.mouse_run_lt3 = self.mouse_lt_list[2]
+            # self.mouse_run_lt2 = self.mouse_lt_list[1]
+            # self.mouse_run_lt3 = self.mouse_lt_list[2]
 
             # MOUSE INITIAL IDLE
-            self.mouse_idle_lt = self.mouse_run_lt2
+            self.mouse_idle_lt = self.mouse_run_lt1
             self.image = self.mouse_idle_lt
             self.rect = self.image.get_rect()
             self.rect.x = self.x_val

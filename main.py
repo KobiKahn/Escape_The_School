@@ -154,7 +154,7 @@ def character_screen():
                     p2_ready = True
 
                 if p1_ready and p2_ready and back_button.collidepoint(pos) and player1_select != None and player2_select != None:
-                    print(player1_select, player2_select)
+                    # print(player1_select, player2_select)
                     return(player1_select, player2_select)
 
 
@@ -363,14 +363,15 @@ def play_screen(level_counter, char1, char2):
     clock = pygame.time.Clock()
 
     # SOUND EFFECTS
-    # fight_music = pygame.mixer.Sound('fight_looped.wav')
-    fight_music = pygame.mixer.Sound('fato_shadow_-_fight_theme_dubstep.mp3')
+    fight_music = pygame.mixer.Sound('MK_Fight_Music.mp3')
     fight_music.set_volume(0.3)
 
     car_crash = pygame.mixer.Sound('Car Crash Sound.mp3')
-
+    x = 0
     while running:
-        fight_music.play(-1)
+        x += 1
+        if x == 1:
+            fight_music.play(-1)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -420,8 +421,6 @@ def play_screen(level_counter, char1, char2):
             player2_group.draw(screen)
             car_group.draw(screen)
             car_group.update()
-            # for car in car_group():
-            #     car.update()
 
         level = level_select[level_counter]
         level.draw(screen, player1_adv)
